@@ -1,0 +1,541 @@
+// Dynamic Schema Registry for Xiaomi S400 Body Scale Metrics
+// Local Club: باشگاه کاراته شرکت برق منطقه ای خراسان
+// Open-Closed Principle (OCP): All UI, PDF, and AI modules consume this registry directly.
+
+export type MetricCategory =
+  | "general"
+  | "composition"
+  | "water"
+  | "bone"
+  | "metabolic"
+  | "control";
+
+export interface MetricDefinition {
+  key: string;
+  nameEn: string;
+  labelFa: string;
+  unit: string;
+  category: MetricCategory;
+  min: number;
+  max: number;
+  step: number;
+  defaultValue: number | string;
+  standardRange?: { min: number; max: number };
+  karateContext?: string;
+  isText?: boolean;
+  textOptions?: { value: string; labelFa: string }[];
+}
+
+export const CATEGORY_LABELS_FA: Record<MetricCategory, { titleFa: string; descFa: string; color: string }> = {
+  general: {
+    titleFa: "شاخص‌های عمومی و ساختار فیزیکی",
+    descFa: "وزن پایه، ضربان قلب، تیپ بدنی و وضعیت کلی فیزیکی",
+    color: "from-blue-500/20 to-cyan-500/10 border-blue-500/30",
+  },
+  composition: {
+    titleFa: "ترکیب بافتی و توده‌های عضلانی/چربی",
+    descFa: "تعیین نسبت عضله و چربی مؤثر در توان انفجاری کومیته و پایداری کاتا",
+    color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30",
+  },
+  water: {
+    titleFa: "هیدراتاسیون و تعادل مایعات بدن",
+    descFa: "میزان آب بدن موثر بر استقامت و ریکاوری حین راند‌های متوالی مسابقه",
+    color: "from-sky-500/20 to-indigo-500/10 border-sky-500/30",
+  },
+  bone: {
+    titleFa: "استحکام و محتوای مواد معدنی استخوان",
+    descFa: "چگالی و قدرت اسکلتی جهت مقاومت در برابر ضربات مستقیم و فرودها",
+    color: "from-amber-500/20 to-orange-500/10 border-amber-500/30",
+  },
+  metabolic: {
+    titleFa: "متابولیسم پایه و سن بیولوژیکی",
+    descFa: "ظرفیت مصرف انرژی در حالت استراحت و راندمان زیستی کاراته‌کا",
+    color: "from-purple-500/20 to-violet-500/10 border-purple-500/30",
+  },
+  control: {
+    titleFa: "اهداف تنظیمی و کنترل ترکیب بدنی",
+    descFa: "میزان اصلاح وزن، چربی و عضله جهت رسیدن به وزن ایده‌آل دسته مسابقاتی",
+    color: "from-rose-500/20 to-red-500/10 border-rose-500/30",
+  },
+};
+
+export const METRICS_CONFIG: MetricDefinition[] = [
+  // 1. Weight (وزن)
+  {
+    key: "weight",
+    nameEn: "Weight",
+    labelFa: "وزن",
+    unit: "کیلوگرم",
+    category: "general",
+    min: 20,
+    max: 160,
+    step: 0.1,
+    defaultValue: 68.5,
+    standardRange: { min: 60, max: 75 },
+    karateContext: "تطابق با کلاس‌های وزنی مصوب فدراسیون جهانی کاراته (WKF)",
+  },
+  // 2. Heart Rate (ضربان قلب)
+  {
+    key: "heartRate",
+    nameEn: "Heart Rate",
+    labelFa: "ضربان قلب",
+    unit: "bpm",
+    category: "general",
+    min: 40,
+    max: 200,
+    step: 1,
+    defaultValue: 64,
+    standardRange: { min: 55, max: 75 },
+    karateContext: "بررسی کاردیو واسکولار پایه و ظرفیت ریکاوری سریع میان راندهای مسابقه",
+  },
+  // 3. BMI (شاخص توده بدنی)
+  {
+    key: "bmi",
+    nameEn: "BMI",
+    labelFa: "شاخص توده بدنی (BMI)",
+    unit: "kg/m²",
+    category: "general",
+    min: 12,
+    max: 45,
+    step: 0.1,
+    defaultValue: 22.4,
+    standardRange: { min: 18.5, max: 24.9 },
+    karateContext: "شاخص مقدماتی توزیع قد به وزن در ورزش‌های رزمی",
+  },
+  // 4. Body Score (امتیاز بدن)
+  {
+    key: "bodyScore",
+    nameEn: "Body Score",
+    labelFa: "امتیاز بدن",
+    unit: "از ۱۰۰",
+    category: "general",
+    min: 0,
+    max: 100,
+    step: 1,
+    defaultValue: 88,
+    standardRange: { min: 80, max: 100 },
+    karateContext: "نمره کلی وضعیت سلامت فیزیکی استخراج شده از الگوریتم شیائومی",
+  },
+  // 5. Body Water Mass (حجم آب بدن)
+  {
+    key: "bodyWaterMass",
+    nameEn: "Body Water Mass",
+    labelFa: "حجم آب بدن",
+    unit: "کیلوگرم",
+    category: "water",
+    min: 15,
+    max: 90,
+    step: 0.1,
+    defaultValue: 43.8,
+    standardRange: { min: 35, max: 55 },
+    karateContext: "حجم مایعات داخل و خارج سلولی ضروری برای جلوگیری از خستگی عصبی-عضلانی",
+  },
+  // 6. Body Water Percentage (درصد آب بدن)
+  {
+    key: "bodyWaterPercentage",
+    nameEn: "Body Water Percentage",
+    labelFa: "درصد آب بدن",
+    unit: "٪",
+    category: "water",
+    min: 30,
+    max: 80,
+    step: 0.1,
+    defaultValue: 63.9,
+    standardRange: { min: 55, max: 70 },
+    karateContext: "سطح بهینه آب جهت تنظیم اسمزی و تحرک سریع مفاصل در اجرای کیزامه و گیاکو سوکی",
+  },
+  // 7. Fat Mass (توده چربی)
+  {
+    key: "fatMass",
+    nameEn: "Fat Mass",
+    labelFa: "توده چربی",
+    unit: "کیلوگرم",
+    category: "composition",
+    min: 2,
+    max: 60,
+    step: 0.1,
+    defaultValue: 8.9,
+    standardRange: { min: 6, max: 12 },
+    karateContext: "وزن مرده غیرمولد؛ کاهش هوشمند آن چابکی جابجایی پاها (Footwork) را ارتقا می‌دهد",
+  },
+  // 8. Body Fat Percentage (درصد چربی بدن)
+  {
+    key: "bodyFatPercentage",
+    nameEn: "Body Fat Percentage",
+    labelFa: "درصد چربی بدن",
+    unit: "٪",
+    category: "composition",
+    min: 5,
+    max: 45,
+    step: 0.1,
+    defaultValue: 13.0,
+    standardRange: { min: 8, max: 15 },
+    karateContext: "میزان چربی استاندارد کاراته‌کای رقابتی (۸ تا ۱۴ درصد برای مردان، ۱۴ تا ۲۰ درصد برای زنان)",
+  },
+  // 9. Protein Mass (توده پروتئین)
+  {
+    key: "proteinMass",
+    nameEn: "Protein Mass",
+    labelFa: "توده پروتئین",
+    unit: "کیلوگرم",
+    category: "composition",
+    min: 5,
+    max: 30,
+    step: 0.1,
+    defaultValue: 12.8,
+    standardRange: { min: 10, max: 18 },
+    karateContext: "سنگ‌بنای بازسازی فیبرهای تند-انقباض عضلانی پس از تمرینات انفجاری",
+  },
+  // 10. Protein Percentage (درصد پروتئین)
+  {
+    key: "proteinPercentage",
+    nameEn: "Protein Percentage",
+    labelFa: "درصد پروتئین",
+    unit: "٪",
+    category: "composition",
+    min: 10,
+    max: 30,
+    step: 0.1,
+    defaultValue: 18.7,
+    standardRange: { min: 16, max: 22 },
+    karateContext: "شاخص ذخیره پروتئینی عضلات جهت پیشگیری از کاتابولیسم حین کاتاهای سنگین",
+  },
+  // 11. Muscle Mass (توده عضلانی)
+  {
+    key: "muscleMass",
+    nameEn: "Muscle Mass",
+    labelFa: "توده عضلانی",
+    unit: "کیلوگرم",
+    category: "composition",
+    min: 20,
+    max: 110,
+    step: 0.1,
+    defaultValue: 56.4,
+    standardRange: { min: 45, max: 65 },
+    karateContext: "منبع اصلی تولید گشتاور و نیروی پرتابی در اجرای ضربات ماواشی گری و اورامواشی",
+  },
+  // 12. Muscle Percentage (درصد عضله)
+  {
+    key: "musclePercentage",
+    nameEn: "Muscle Percentage",
+    labelFa: "درصد عضله",
+    unit: "٪",
+    category: "composition",
+    min: 35,
+    max: 85,
+    step: 0.1,
+    defaultValue: 82.3,
+    standardRange: { min: 72, max: 85 },
+    karateContext: "نسبت بافت پیش‌ران در کل وزن کاراته‌کا",
+  },
+  // 13. Bone Mineral Content (محتوای مواد معدنی استخوان)
+  {
+    key: "boneMineralContent",
+    nameEn: "Bone Mineral Content",
+    labelFa: "محتوای مواد معدنی استخوان",
+    unit: "کیلوگرم",
+    category: "bone",
+    min: 1.0,
+    max: 6.0,
+    step: 0.01,
+    defaultValue: 3.2,
+    standardRange: { min: 2.5, max: 4.0 },
+    karateContext: "محافظت در برابر شکستگی‌های ناشی از برخورد ساعد و ساق پا در درگیری‌های نزدیک",
+  },
+  // 14. Bone Mineral Percentage (درصد مواد معدنی استخوان)
+  {
+    key: "boneMineralPercentage",
+    nameEn: "Bone Mineral Percentage",
+    labelFa: "درصد مواد معدنی استخوان",
+    unit: "٪",
+    category: "bone",
+    min: 2.0,
+    max: 8.0,
+    step: 0.1,
+    defaultValue: 4.7,
+    standardRange: { min: 3.5, max: 5.5 },
+    karateContext: "شاخص تراکم و کلسیم اسکلت برای جذب ضربات سنگین بلوکه (اوکه)",
+  },
+  // 15. Visceral Fat Rate (سطح چربی احشایی)
+  {
+    key: "visceralFatRate",
+    nameEn: "Visceral Fat Rate",
+    labelFa: "سطح چربی احشایی",
+    unit: "سطح",
+    category: "composition",
+    min: 1,
+    max: 30,
+    step: 1,
+    defaultValue: 3,
+    standardRange: { min: 1, max: 6 },
+    karateContext: "چربی اطراف ارگان‌های حیاتی؛ مقادیر بالای ۶ موجب افت راندمان تنفس شکمی (هارا) می‌شود",
+  },
+  // 16. Basal Metabolic Rate - BMR (نرخ متابولیسم پایه)
+  {
+    key: "bmr",
+    nameEn: "Basal Metabolic Rate - BMR",
+    labelFa: "نرخ متابولیسم پایه (BMR)",
+    unit: "کیلوکالری/روز",
+    category: "metabolic",
+    min: 800,
+    max: 3500,
+    step: 1,
+    defaultValue: 1680,
+    standardRange: { min: 1400, max: 2100 },
+    karateContext: "حداقل کالری روزانه برای تعیین ماکروهای تغذیه‌ای فاز سر وزن رسیدن",
+  },
+  // 17. Lean Body Mass (توده بدون چربی)
+  {
+    key: "leanBodyMass",
+    nameEn: "Lean Body Mass",
+    labelFa: "توده بدون چربی",
+    unit: "کیلوگرم",
+    category: "composition",
+    min: 20,
+    max: 120,
+    step: 0.1,
+    defaultValue: 59.6,
+    standardRange: { min: 50, max: 70 },
+    karateContext: "مجموع عضلات، استخوان‌ها و آب فعال در تولید نیرو منهای چربی ذخیره‌ای",
+  },
+  // 18. Body Type (نوع بدن)
+  {
+    key: "bodyType",
+    nameEn: "Body Type",
+    labelFa: "نوع بدن",
+    unit: "",
+    category: "general",
+    min: 0,
+    max: 10,
+    step: 1,
+    defaultValue: "muscular",
+    isText: true,
+    textOptions: [
+      { value: "underweight", labelFa: "لاغر و کمبود وزن" },
+      { value: "balanced", labelFa: "متوازن استاندارد" },
+      { value: "balancedMuscular", labelFa: "متوازن عضلانی (ایده‌آل کومیته)" },
+      { value: "skinnyFat", labelFa: "لاغر با درصد چربی بالا" },
+      { value: "muscular", labelFa: "عضلانی قدرتی (ایده‌آل کاتا)" },
+      { value: "thickSet", labelFa: "تنومند و سنگین‌وزن" },
+      { value: "overweight", labelFa: "اضافه وزن" },
+      { value: "obese", labelFa: "چاقی بیش از حد" },
+    ],
+    karateContext: "تیپ ساختاری سوماتوتایپ ورزشکار موثر در استراتژی مبارزه یا انتخاب فرم کاتا",
+  },
+  // 19. Estimated Waist-Hip Ratio (نسبت تقریبی دور کمر به باسن)
+  {
+    key: "estimatedWaistHipRatio",
+    nameEn: "Estimated Waist-Hip Ratio",
+    labelFa: "نسبت تقریبی دور کمر به باسن",
+    unit: "",
+    category: "general",
+    min: 0.5,
+    max: 1.5,
+    step: 0.01,
+    defaultValue: 0.82,
+    standardRange: { min: 0.75, max: 0.88 },
+    karateContext: "تعادل و نقطه ثقل لگن (تان‌دن) برای ثبات چرخش در ضربات چرخشی جودان",
+  },
+  // 20. Body Age (سن بدنی)
+  {
+    key: "bodyAge",
+    nameEn: "Body Age",
+    labelFa: "سن بدنی",
+    unit: "سال",
+    category: "metabolic",
+    min: 10,
+    max: 80,
+    step: 1,
+    defaultValue: 20,
+    standardRange: { min: 15, max: 35 },
+    karateContext: "شاخص سرزندگی بیولوژیک سلولی مقایسه شده با سن تقویمی",
+  },
+  // 21. Skeletal Muscle Mass (توده عضلات اسکلتی)
+  {
+    key: "skeletalMuscleMass",
+    nameEn: "Skeletal Muscle Mass",
+    labelFa: "توده عضلات اسکلتی",
+    unit: "کیلوگرم",
+    category: "composition",
+    min: 15,
+    max: 70,
+    step: 0.1,
+    defaultValue: 34.2,
+    standardRange: { min: 28, max: 42 },
+    karateContext: "عضلات متصل به استخوان؛ پیشرانه اصلی شتاب اولیه و زمان عکس‌العمل واکنشی",
+  },
+  // 22. Weight Control (کنترل وزن)
+  {
+    key: "weightControl",
+    nameEn: "Weight Control",
+    labelFa: "کنترل وزن",
+    unit: "کیلوگرم",
+    category: "control",
+    min: -25,
+    max: 25,
+    step: 0.1,
+    defaultValue: 0.0,
+    standardRange: { min: -2, max: 2 },
+    karateContext: "تعدیل وزنی توصیه شده جهت تطبیق با کلاس وزنی اختصاصی مسابقات استانی و کشوری",
+  },
+  // 23. Muscle Control (کنترل عضله)
+  {
+    key: "muscleControl",
+    nameEn: "Muscle Control",
+    labelFa: "کنترل عضله",
+    unit: "کیلوگرم",
+    category: "control",
+    min: -15,
+    max: 20,
+    step: 0.1,
+    defaultValue: 1.5,
+    standardRange: { min: 0, max: 4 },
+    karateContext: "میزان افزایش عضله پیشنهادی برای تقویت کمربند شانه و عضلات کوادریکسپس",
+  },
+  // 24. Fat Control (کنترل چربی)
+  {
+    key: "fatControl",
+    nameEn: "Fat Control",
+    labelFa: "کنترل چربی",
+    unit: "کیلوگرم",
+    category: "control",
+    min: -30,
+    max: 10,
+    step: 0.1,
+    defaultValue: -1.5,
+    standardRange: { min: -3, max: 0 },
+    karateContext: "میزان کاهش بافت چربی هدفمند بدون افت آب و توده عضلانی",
+  },
+  // 25. Standard Weight (وزن استاندارد)
+  {
+    key: "standardWeight",
+    nameEn: "Standard Weight",
+    labelFa: "وزن استاندارد",
+    unit: "کیلوگرم",
+    category: "general",
+    min: 30,
+    max: 120,
+    step: 0.1,
+    defaultValue: 68.5,
+    standardRange: { min: 62, max: 74 },
+    karateContext: "وزن مرجع محاسبه شده بر مبنای قد و استخوان‌بندی رزمی‌کار",
+  },
+];
+
+export const PRESET_ATHLETES = [
+  {
+    titleFa: "کومیته کار نخبه (رده بزرگسالان - ۶۷ کیلوگرم)",
+    fullName: "سجاد کریمی",
+    gender: "MALE" as const,
+    birthDateJalali: "1381/04/10",
+    metrics: {
+      weight: 66.8,
+      heartRate: 58,
+      bmi: 21.6,
+      bodyScore: 94,
+      bodyWaterMass: 44.5,
+      bodyWaterPercentage: 66.6,
+      fatMass: 6.8,
+      bodyFatPercentage: 10.2,
+      proteinMass: 13.5,
+      proteinPercentage: 20.2,
+      muscleMass: 56.5,
+      musclePercentage: 84.6,
+      boneMineralContent: 3.4,
+      boneMineralPercentage: 5.1,
+      visceralFatRate: 2,
+      bmr: 1740,
+      leanBodyMass: 60.0,
+      bodyType: "balancedMuscular",
+      estimatedWaistHipRatio: 0.79,
+      bodyAge: 19,
+      skeletalMuscleMass: 35.8,
+      weightControl: 0.2,
+      muscleControl: 0.8,
+      fatControl: -0.6,
+      standardWeight: 67.0,
+    },
+  },
+  {
+    titleFa: "کاتا رو ارشد (پایداری و استحکام ایستایی)",
+    fullName: "رضا حسینی نژاد",
+    gender: "MALE" as const,
+    birthDateJalali: "1378/09/22",
+    metrics: {
+      weight: 74.2,
+      heartRate: 62,
+      bmi: 23.4,
+      bodyScore: 92,
+      bodyWaterMass: 47.1,
+      bodyWaterPercentage: 63.5,
+      fatMass: 8.5,
+      bodyFatPercentage: 11.5,
+      proteinMass: 14.8,
+      proteinPercentage: 19.9,
+      muscleMass: 62.0,
+      musclePercentage: 83.6,
+      boneMineralContent: 3.7,
+      boneMineralPercentage: 5.0,
+      visceralFatRate: 3,
+      bmr: 1850,
+      leanBodyMass: 65.7,
+      bodyType: "muscular",
+      estimatedWaistHipRatio: 0.81,
+      bodyAge: 22,
+      skeletalMuscleMass: 38.6,
+      weightControl: -0.5,
+      muscleControl: 1.2,
+      fatControl: -1.7,
+      standardWeight: 73.5,
+    },
+  },
+  {
+    titleFa: "ورزشکار نوجوان مستعد (توسعه و رشد پایه)",
+    fullName: "امیرمهدی رضایی",
+    gender: "MALE" as const,
+    birthDateJalali: "1389/02/15",
+    metrics: {
+      weight: 52.3,
+      heartRate: 68,
+      bmi: 19.2,
+      bodyScore: 86,
+      bodyWaterMass: 34.0,
+      bodyWaterPercentage: 65.0,
+      fatMass: 6.5,
+      bodyFatPercentage: 12.4,
+      proteinMass: 9.8,
+      proteinPercentage: 18.7,
+      muscleMass: 43.2,
+      musclePercentage: 82.6,
+      boneMineralContent: 2.6,
+      boneMineralPercentage: 5.0,
+      visceralFatRate: 2,
+      bmr: 1420,
+      leanBodyMass: 45.8,
+      bodyType: "balanced",
+      estimatedWaistHipRatio: 0.77,
+      bodyAge: 14,
+      skeletalMuscleMass: 26.5,
+      weightControl: 1.5,
+      muscleControl: 2.0,
+      fatControl: -0.5,
+      standardWeight: 54.0,
+    },
+  },
+];
+
+export function getMetricByKey(key: string): MetricDefinition | undefined {
+  return METRICS_CONFIG.find((m) => m.key === key);
+}
+
+export function getMetricsByCategory(category: MetricCategory): MetricDefinition[] {
+  return METRICS_CONFIG.filter((m) => m.category === category);
+}
+
+export function getDefaultMetricsValues(): Record<string, number | string> {
+  const result: Record<string, number | string> = {};
+  for (const m of METRICS_CONFIG) {
+    result[m.key] = m.defaultValue;
+  }
+  return result;
+}

@@ -6,12 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@prisma/client": "^7.10.0",
+    "@react-pdf/renderer": "^4.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "date-fns-jalali": "^4.4.0-0",
+    "groq-sdk": "^1.6.0",
+    "lucide-react": "^1.55.0",
     "next": "16.4.0",
+    "prisma": "^7.10.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-hook-form": "^7.90.0",
+    "react-webcam": "^7.2.0",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

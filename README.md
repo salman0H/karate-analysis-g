@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# karate-analysis-g
 
-## Getting Started
+## Smart Karate Body Analytics System
+### باشگاه کاراته شرکت برق منطقه ای خراسان
 
-First, run the development server:
+سامانه هوشمند پایش بیومتریک و آنالیز تخصصی ۲۵ فاکتور فیزیولوژیکی ترکیب بدنی ورزشکاران با دستگاه Xiaomi S400 و تحلیل پیشرفته هوش مصنوعی (Llama-3).
 
+---
+
+## ویژگی‌های کلیدی (Key Features)
+
+- **طرحواره باز دینامیک (Dynamic Schema Registry - OCP):** ذخیره کلیه ۲۵ شاخص در قالب ستون منفرد `JSONB` بدون نیاز به تغییر اسکیمای دیتابیس در آینده.
+- **رابط کاربری ورزشکار (Athlete Intake Console):** ثبت مشخصات، تاریخ تولد شمسی، محاسبه دقیق سن با تقویم جلالی، عکاسی زنده با وب‌کم (`react-webcam`) همراه با قابلیت آپلود تصویر پرتره.
+- **موتور هوش مصنوعی مربیگری کاراته (Groq Llama-3 AI Engine):** تحلیل تخصصی توان انفجاری کومیته، پایداری استاتیک کاتا، بالانس عضله به چربی و ارائه برنامه ۴ هفته‌ای عملیاتی.
+- **صدور شناسنامه رسمی چاپی (Branded PDF Generation):** تولید فایل PDF با تایپوگرافی فارسی، سربرگ اختصاصی باشگاه و نمایش جدول ۲۵ شاخص با `@react-pdf/renderer`.
+- **طراحی مدرن و واکنش‌گرا (Sports Analytics UI):** تم دارک ورزشی، شاخص‌های آنی HUD، پیش‌فرض‌های آماده برای تست سریع.
+
+---
+
+## پشته فناوری (Technology Stack)
+
+- **Framework:** Next.js (App Router, Turbopack)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS, Glassmorphism
+- **Database & ORM:** PostgreSQL + Prisma (JSONB Registry)
+- **Forms & Validation:** react-hook-form + zod
+- **AI Integration:** Groq SDK (Llama-3 model)
+- **Reporting:** @react-pdf/renderer
+- **Hardware Integration:** react-webcam
+
+---
+
+## راه‌اندازی و اجرا (Getting Started)
+
+### ۱. نصب وابستگی‌ها
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ۲. تنظیم متغیرهای محیطی
+یک فایل `.env.local` بر اساس `.env.example` ایجاد کنید:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+مقادیر زیر را در `.env.local` مقداردهی کنید:
+```env
+GROQ_API_KEY="your_groq_api_key_here"
+DATABASE_URL="postgresql://user:password@localhost:5432/karate_analytics?schema=public"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### ۳. ساخت و همگام‌سازی دیتابیس (Prisma)
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-## Learn More
+### ۴. اجرای برنامه
+```bash
+# حالت توسعه
+npm run dev
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# حالت پروداکشن
+npm run build
+npm start
+```
+برنامه در آدرس `http://localhost:3000` (یا پورت پیکربندی‌شده) در دسترس خواهد بود.

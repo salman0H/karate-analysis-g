@@ -1,0 +1,57 @@
+// Smart Karate Body Analytics System — Database Schema
+// باشگاه کاراته شرکت برق منطقه ای خراسان
+//
+// Dynamic Schema Registry constraint:
+// The 25 Xiaomi S400 body metrics are NOT individual columns.
+// They live in a single `metrics` JSONB field, driven by src/config/metrics.config.ts.
+// This preserves the Open-Closed Principle (OCP) for future scale telemetry factors.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Athlete {
+  id              String        @id @default(cuid())
+  fullName        String
+  gender          Gender
+  birthDateJalali String        // Stored as "YYYY/MM/DD" (Jalali calendar)
+  age             Int
+  selfieUrl       String?       @db.Text
+  assessments     Assessment[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([fullName])
+  @@map("athletes")
+}
+
+model Assessment {
+  id          String    @id @default(cuid())
+  athleteId   String
+  athlete     Athlete   @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+
+  // Dynamic registry: keys match MetricDefinition.key from metrics.config.ts
+  // Example: { "weight": 68.5, "bmi": 21.8, "bodyType": 4, ... }
+  metrics     Json      @db.JsonB
+
+  // Persian Karate Conditioning analysis returned by Groq Llama-3
+  aiReport    String?   @db.Text
+  selfieUrl   String?   @db.Text
+  deviceModel String    @default("Xiaomi S400")
+
+  measuredAt  DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([athleteId])
+  @@map("assessments")
+}
