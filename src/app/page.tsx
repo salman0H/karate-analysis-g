@@ -23,13 +23,13 @@ export default function Home() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
             <span className="font-semibold">
-              پایگاه سنجش و ارتقای عملکرد قهرمانی
+              پایگاه سنجش و ارتقای عملکرد قهرمانی • Athletic Performance Center
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>آنالایزر: Xiaomi S400 Bioimpedance</span>
+            <span>Hardware: Xiaomi S400 Bioimpedance</span>
             <span>•</span>
-            <span>هوش مصنوعی: Llama-3 Conditioning Engine</span>
+            <span>AI: Groq Llama-3 Conditioning Engine</span>
           </div>
         </div>
       </div>
@@ -41,16 +41,24 @@ export default function Home() {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300 backdrop-blur-md">
                 <Shield className="h-3.5 w-3.5 text-emerald-400" />
-                <span>وزارت نیرو • شرکت سهامی برق منطقه‌ای خراسان</span>
+                <span>وزارت نیرو • شرکت سهامی برق منطقه‌ای خراسان (KREC)</span>
               </div>
 
-              <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
-                باشگاه کاراته شرکت برق منطقه ای خراسان
-              </h1>
+              <div>
+                <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+                  باشگاه کاراته شرکت برق منطقه ای خراسان
+                </h1>
+                <p className="mt-1 text-xs sm:text-sm font-semibold tracking-wide text-emerald-400 font-mono">
+                  Khorasan Regional Electric Company Karate Club • Smart Body Analytics System
+                </p>
+              </div>
 
               <p className="max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
                 سامانه هوشمند پایش بیومتریک و آنالیز تخصصی ۲۵ فاکتور فیزیولوژیکی ترکیب بدنی. 
                 طراحی شده جهت بهینه‌سازی توان انفجاری کومیته، پایداری استاتیک کاتا و صدور شناسنامه رسمی سلامت ورزشی.
+              </p>
+              <p className="text-xs text-slate-500 font-sans">
+                Professional body composition intelligence evaluating Kumite explosiveness, Kata stability, and WKF division weight control.
               </p>
             </div>
 
@@ -59,19 +67,19 @@ export default function Home() {
               <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3.5 text-right backdrop-blur-md">
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <Activity className="h-4 w-4 text-emerald-400" />
-                  <span>شاخص‌ها</span>
+                  <span>شاخص‌ها / Factors</span>
                 </div>
-                <div className="mt-1 text-lg font-bold text-white">۲۵ فاکتور</div>
-                <div className="text-[10px] text-emerald-400">ثبت دینامیک (OCP)</div>
+                <div className="mt-1 text-lg font-bold text-white">۲۵ فاکتور (S400)</div>
+                <div className="text-[10px] text-emerald-400">Dynamic Registry (OCP)</div>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3.5 text-right backdrop-blur-md">
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                   <Cpu className="h-4 w-4 text-cyan-400" />
-                  <span>موتور تحلیل</span>
+                  <span>موتور تحلیل / AI Coach</span>
                 </div>
                 <div className="mt-1 text-lg font-bold text-white">Groq AI</div>
-                <div className="text-[10px] text-cyan-400">Llama-3 Coach</div>
+                <div className="text-[10px] text-cyan-400">Llama-3 Conditioning</div>
               </div>
             </div>
           </div>
@@ -83,7 +91,7 @@ export default function Home() {
         <Suspense
           fallback={
             <div className="flex h-64 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/40 text-sm text-slate-400">
-              در حال بارگذاری سامانه هوشمند...
+              در حال بارگذاری سامانه هوشمند... Loading Smart System...
             </div>
           }
         >
@@ -96,17 +104,24 @@ export default function Home() {
         <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Award className="h-4 w-4 text-emerald-400" />
-            <span className="font-semibold text-slate-400">
-              باشگاه کاراته شرکت برق منطقه ای خراسان
-            </span>
+            <div className="text-right sm:text-left">
+              <span className="font-semibold text-slate-400 block">
+                باشگاه کاراته شرکت برق منطقه ای خراسان
+              </span>
+              <span className="text-[10px] text-slate-600 block">
+                Khorasan Regional Electric Company Karate Sports Club
+              </span>
+            </div>
           </div>
           <p>
-            کلیه حقوق این سامانه متعلق به تربیت بدنی و امور ورزش شرکت سهامی برق منطقه‌ای خراسان است.
+            کلیه حقوق این سامانه متعلق به تربیت بدنی شرکت سهامی برق منطقه‌ای خراسان است.
           </p>
           <div className="flex items-center gap-3 font-mono text-[11px] text-slate-400">
             <span>Next.js App Router</span>
             <span>•</span>
             <span>Xiaomi S400 Registry</span>
+            <span>•</span>
+            <span>PDF Renderer</span>
           </div>
         </div>
       </footer>

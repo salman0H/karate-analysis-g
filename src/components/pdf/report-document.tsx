@@ -254,13 +254,13 @@ export function ReportDocument({
         <View style={styles.headerWrapper}>
           <View style={styles.headerTextGroup}>
             <Text style={styles.clubBadge}>
-              سامانه هوشمند پایش بدنی و فیزیولوژی ورزشی
+              سامانه هوشمند پایش بدنی و فیزیولوژی ورزشی • Sports Biometrics & Conditioning System
             </Text>
             <Text style={styles.clubTitle}>
               باشگاه کاراته شرکت برق منطقه ای خراسان
             </Text>
             <Text style={styles.subHeader}>
-              گزارش رسمی سنجش بیومتریک و ترکیب بدنی آنالایزر هوشمند Xiaomi S400
+              Khorasan Regional Electric Company Karate Club • Xiaomi S400 Official Analytics
             </Text>
           </View>
           {selfieDataUrl ? (
@@ -274,25 +274,25 @@ export function ReportDocument({
         {/* Athlete Profile Bar */}
         <View style={styles.athleteProfileBar}>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>نام و نام خانوادگی:</Text>
+            <Text style={styles.profileLabel}>نام ورزشکار / Athlete Name:</Text>
             <Text style={styles.profileValue}>{fullName}</Text>
           </View>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>جنسیت:</Text>
+            <Text style={styles.profileLabel}>جنسیت / Gender:</Text>
             <Text style={styles.profileValue}>
-              {gender === "MALE" ? "مرد (آقایان)" : "زن (بانوان)"}
+              {gender === "MALE" ? "مرد / Male" : "زن / Female"}
             </Text>
           </View>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>تاریخ تولد (شمسی):</Text>
+            <Text style={styles.profileLabel}>تاریخ تولد / Birthdate:</Text>
             <Text style={styles.profileValue}>{birthDateJalali}</Text>
           </View>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>سن محاسبه‌شده:</Text>
-            <Text style={styles.profileValue}>{age} سال</Text>
+            <Text style={styles.profileLabel}>سن / Age:</Text>
+            <Text style={styles.profileValue}>{age} سال (Yrs)</Text>
           </View>
           <View style={styles.profileItem}>
-            <Text style={styles.profileLabel}>تاریخ صدور:</Text>
+            <Text style={styles.profileLabel}>تاریخ صدور / Date:</Text>
             <Text style={styles.profileValue}>{generatedAt}</Text>
           </View>
         </View>
@@ -306,12 +306,16 @@ export function ReportDocument({
           return (
             <View key={category} style={styles.categoryBlock}>
               <View style={styles.categoryHeader}>
-                <Text style={styles.categoryTitle}>{catConfig.titleFa}</Text>
+                <Text style={styles.categoryTitle}>
+                  {catConfig.titleFa} • {catConfig.titleEn}
+                </Text>
               </View>
               <View style={styles.metricsGrid}>
                 {catMetrics.map((metric) => (
                   <View key={metric.key} style={styles.metricCard}>
-                    <Text style={styles.metricLabelFa}>{metric.labelFa}</Text>
+                    <Text style={styles.metricLabelFa}>
+                      {metric.labelFa} / {metric.nameEn}
+                    </Text>
                     <Text style={styles.metricValueText}>
                       {getDisplayValue(metric, metrics[metric.key])}
                     </Text>
@@ -326,9 +330,9 @@ export function ReportDocument({
         <View style={styles.aiSection}>
           <View style={styles.aiHeader}>
             <Text style={styles.aiTitle}>
-              تحلیل تخصصی مربی ارشد بدنسازی کاراته (AI Karate Conditioning)
+              تحلیل تخصصی مربی ارشد بدنسازی کاراته (Elite Karate Conditioning Analysis)
             </Text>
-            <Text style={styles.aiBadge}>مدل تحلیلی Llama-3 / Groq</Text>
+            <Text style={styles.aiBadge}>Llama-3 / Groq Conditioning Engine</Text>
           </View>
           <Text style={styles.aiContent}>{report}</Text>
         </View>
@@ -339,7 +343,7 @@ export function ReportDocument({
             صادر شده توسط واحد سنجش و سلامت بدنی باشگاه کاراته شرکت برق منطقه ای خراسان
           </Text>
           <Text style={styles.footerBrand}>
-            Smart Karate Body Analytics Engine
+            Smart Karate Body Analytics Engine • Khorasan Electric
           </Text>
         </View>
       </Page>

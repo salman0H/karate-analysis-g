@@ -26,35 +26,56 @@ export interface MetricDefinition {
   textOptions?: { value: string; labelFa: string }[];
 }
 
-export const CATEGORY_LABELS_FA: Record<MetricCategory, { titleFa: string; descFa: string; color: string }> = {
+export const CATEGORY_LABELS_FA: Record<
+  MetricCategory,
+  {
+    titleFa: string;
+    titleEn: string;
+    descFa: string;
+    descEn: string;
+    color: string;
+  }
+> = {
   general: {
     titleFa: "شاخص‌های عمومی و ساختار فیزیکی",
+    titleEn: "General & Physical Structure",
     descFa: "وزن پایه، ضربان قلب، تیپ بدنی و وضعیت کلی فیزیکی",
+    descEn: "Base weight, resting heart rate, body score, and morphologic type",
     color: "from-blue-500/20 to-cyan-500/10 border-blue-500/30",
   },
   composition: {
     titleFa: "ترکیب بافتی و توده‌های عضلانی/چربی",
+    titleEn: "Tissue Composition & Muscle/Fat Masses",
     descFa: "تعیین نسبت عضله و چربی مؤثر در توان انفجاری کومیته و پایداری کاتا",
+    descEn: "Muscle-to-fat ratio critical for Kumite explosiveness and Kata stability",
     color: "from-emerald-500/20 to-teal-500/10 border-emerald-500/30",
   },
   water: {
     titleFa: "هیدراتاسیون و تعادل مایعات بدن",
+    titleEn: "Hydration & Fluid Balance",
     descFa: "میزان آب بدن موثر بر استقامت و ریکاوری حین راند‌های متوالی مسابقه",
+    descEn: "Intra/extracellular fluid volume essential for rapid recovery between tournament bouts",
     color: "from-sky-500/20 to-indigo-500/10 border-sky-500/30",
   },
   bone: {
     titleFa: "استحکام و محتوای مواد معدنی استخوان",
+    titleEn: "Bone Density & Mineral Content",
     descFa: "چگالی و قدرت اسکلتی جهت مقاومت در برابر ضربات مستقیم و فرودها",
+    descEn: "Skeletal mineral matrix for absorbing direct strikes and blocking heavy impact",
     color: "from-amber-500/20 to-orange-500/10 border-amber-500/30",
   },
   metabolic: {
     titleFa: "متابولیسم پایه و سن بیولوژیکی",
+    titleEn: "Basal Metabolism & Bio-Age",
     descFa: "ظرفیت مصرف انرژی در حالت استراحت و راندمان زیستی کاراته‌کا",
+    descEn: "Resting metabolic rate (BMR) and cellular bio-vitality recovery index",
     color: "from-purple-500/20 to-violet-500/10 border-purple-500/30",
   },
   control: {
     titleFa: "اهداف تنظیمی و کنترل ترکیب بدنی",
+    titleEn: "Body Control & Adjustment Goals",
     descFa: "میزان اصلاح وزن، چربی و عضله جهت رسیدن به وزن ایده‌آل دسته مسابقاتی",
+    descEn: "Target weight, muscle, and fat adjustments to match WKF competitive divisions",
     color: "from-rose-500/20 to-red-500/10 border-rose-500/30",
   },
 };
@@ -539,3 +560,56 @@ export function getDefaultMetricsValues(): Record<string, number | string> {
   }
   return result;
 }
+
+export const SAMPLE_ATHLETE_EXPORT = {
+  fullName: "سجاد کریمی (Sajad Karimi)",
+  gender: "MALE" as const,
+  birthDateJalali: "1381/04/10",
+  age: 22,
+  selfieDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAA3klEQVR4nO3awREDIQxD0e0guaWHdJmy0t02kIAwBmnXmvEZ/ruCj8frfek56AUGsAsMYBcYkH3i8/tpjyig271IMgsIdOdK4oCU9HlGEJBeHzZEAIvqY4YxwNL0GGMAsK1+yIACNtfjhhoASj1o6AOI9YihA6DXdw23BtC7EYMBsgB6MWgwQBNAb8UNBhhggAEGGGCAHkDT8LPTAFmAmuFfpAHKAB1Do/DuAAVDO6/A6zTRgISVAVz+j2yzAU8q9k+82hAoqborkcuYCSi/LxSQ5F7nnTn2GMAeA9hzApgX3Wfs9ZV0AAAAAElFTkSuQmCC",
+  metrics: {
+    weight: 66.8,
+    heartRate: 58,
+    bmi: 21.6,
+    bodyScore: 94,
+    bodyWaterMass: 44.5,
+    bodyWaterPercentage: 66.6,
+    fatMass: 6.8,
+    bodyFatPercentage: 10.2,
+    proteinMass: 13.5,
+    proteinPercentage: 20.2,
+    muscleMass: 56.5,
+    musclePercentage: 84.6,
+    boneMineralContent: 3.4,
+    boneMineralPercentage: 5.1,
+    visceralFatRate: 2,
+    bmr: 1740,
+    leanBodyMass: 60.0,
+    bodyType: "balancedMuscular",
+    estimatedWaistHipRatio: 0.79,
+    bodyAge: 19,
+    skeletalMuscleMass: 35.8,
+    weightControl: 0.2,
+    muscleControl: 0.8,
+    fatControl: -0.6,
+    standardWeight: 67.0,
+  },
+  report: `تحلیل ارشد فیزیولوژی و آماده‌سازی جسمانی کاراته (Elite Karate Conditioning Analysis)
+باشگاه کاراته شرکت برق منطقه‌ای خراسان • Khorasan Regional Electric Karate Club
+ورزشکار: سجاد کریمی (Sajad Karimi) | رده وزنی: -۶۷ کیلوگرم بزرگسالان | تاریخ صدور: ۱۴۰۵/۰۲/۱۵
+
+۱. ارزیابی راندمان مکانیکی و ترکیب بدنی (Mechanical Efficiency & Body Composition):
+نسبت توان به وزن (Power-to-Weight Ratio) در وضعیت فوق‌العاده عالی (Elite WKF Standard) قرار دارد. درصد چربی ۱۰.۲٪ در کنار درصد عضله ۸۴.۶٪، تلفات انرژی ناشی از بار مرده را در جابجایی‌های سرعتی (Surikomi Footwork) به صفر رسانده و شتاب اولیه ضربات کیزامه سوکی (Kizame Zuki) را به بیشینه می‌رساند.
+
+۲. پایداری و تعادل کاتا (Kata Dynamic & Static Stability):
+پایین بودن سطح چربی احشایی (سطح ۲) و مرکز ثقل بهینه در دان‌تن (Hara)، ثبات دینامیکی پایینی در داچی‌های زنکوتسو، کوکوتسو و کیبا داچی فراهم می‌آورد که اجرای بدون لغزش کاتاهای رده بالا نظیر گوجوشیهو شو و کانکو شو را تسهیل می‌سازد.
+
+۳. هیدراتاسیون و استحکام اسکلتی (Hydration & Bone Density):
+سطح آب بدن (۶۶.۶٪) مانع از انقباضات زودرس و تجمع اسیدوز در راندهای متوالی جدول مسابقات می‌گردد. همچنین تراکم مواد معدنی استخوان (۳.۴ کیلوگرم) مقاومت بهینه در برابر بلاک‌های سنگین (Uke) را تضمین می‌کند.
+
+۴. پروتکل عملی ۴ هفته‌ای مربیگری (4-Week Actionable Conditioning Protocol):
+- هفته ۱ و ۲: تقویت توان واکنشی و پرش‌های پلایومتریک جانبی با زمان استراحت کوتاه.
+- هفته ۳: تمرینات ایزومتریک داچی‌های عمیق همراه با وزنه جهت توسعه استقامت موضعی چهارسر ران.
+- هفته ۴: تیپرینگ (Tapering)، ریکاوری میوفاشیال و تثبیت دقیق وزن برای ورود به مسابقات.`,
+};

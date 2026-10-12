@@ -7,6 +7,7 @@ import {
   METRICS_CONFIG,
   CATEGORY_LABELS_FA,
   PRESET_ATHLETES,
+  SAMPLE_ATHLETE_EXPORT,
   getDefaultMetricsValues,
   MetricCategory,
 } from "@/config/metrics.config";
@@ -238,31 +239,113 @@ export function AthleteForm() {
     }
   };
 
+  const [isExportingSample, setIsExportingSample] = useState(false);
+
+  const handleDownloadSamplePdf = async () => {
+    setIsExportingSample(true);
+    try {
+      const response = await fetch("/api/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(SAMPLE_ATHLETE_EXPORT),
+      });
+
+      if (!response.ok) {
+        throw new Error("خطا در صدور فایل PDF نمونه");
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.download = `شناسنامه-نمونه-سجاد_کریمی-Sample.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "خطا در دانلود فایل PDF نمونه");
+    } finally {
+      setIsExportingSample(false);
+    }
+  };
+
+  const handleLoadSampleData = () => {
+    reset({
+      fullName: SAMPLE_ATHLETE_EXPORT.fullName,
+      gender: SAMPLE_ATHLETE_EXPORT.gender,
+      birthDateJalali: SAMPLE_ATHLETE_EXPORT.birthDateJalali,
+      selfieDataUrl: SAMPLE_ATHLETE_EXPORT.selfieDataUrl,
+      metrics: SAMPLE_ATHLETE_EXPORT.metrics,
+    });
+    setReport(SAMPLE_ATHLETE_EXPORT.report);
+    setReportSource("sample-data");
+    setFormError(null);
+  };
+
   const currentCategoryMetrics = useMemo(() => {
     return METRICS_CONFIG.filter((m) => m.category === activeCategory);
   }, [activeCategory]);
 
   return (
     <div className="space-y-8">
-      {/* Preset Quick-Picker Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-xl">
-        <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-amber-400" />
-          <span className="text-xs font-bold text-slate-200">
-            پروفایل‌های پیش‌فرض کاراته (بارگذاری سریع جهت تست):
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {PRESET_ATHLETES.map((preset, idx) => (
-            <button
-              key={preset.titleFa}
+      {/* Preset Quick-Picker & Sample Export Bar */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-xl">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/60 pb-3">
+          <div className="flex items-center gap-2">
+            <Award className="h-5 w-5 text-amber-400" />
+            <div>
+              <span className="text-xs font-bold text-slate-200 block">
+                داده‌های آزمایشی و صدور آنی PDF نمونه (Sample Data & Instant PDF Export)
+              </span>
+              <span className="text-[11px] text-slate-400 block font-sans">
+                Fast test pipeline with complete mock athlete biometrics & conditioning analysis
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
               type="button"
-              onClick={() => handleApplyPreset(idx)}
-              className="rounded-xl border border-slate-700/80 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-300 transition-all hover:border-emerald-500 hover:bg-emerald-950/40 hover:text-emerald-300 active:scale-95 cursor-pointer"
+              variant="gold"
+              size="sm"
+              onClick={handleDownloadSamplePdf}
+              disabled={isExportingSample}
             >
-              {preset.titleFa}
-            </button>
-          ))}
+              {isExportingSample ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              صدور مستقیم PDF نمونه (Export Sample PDF)
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleLoadSampleData}
+            >
+              <RefreshCw className="h-3.5 w-3.5 text-emerald-400" />
+              بارگذاری در فرم (Populate Form)
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <span className="text-xs text-slate-400 font-medium">
+            پروفایل‌های رده‌ای کاراته (Athlete Presets):
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {PRESET_ATHLETES.map((preset, idx) => (
+              <button
+                key={preset.titleFa}
+                type="button"
+                onClick={() => handleApplyPreset(idx)}
+                className="rounded-xl border border-slate-700/80 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-300 transition-all hover:border-emerald-500 hover:bg-emerald-950/40 hover:text-emerald-300 active:scale-95 cursor-pointer"
+              >
+                {preset.titleFa}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -270,19 +353,19 @@ export function AthleteForm() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold">وزن فعلی</span>
+            <span className="text-xs font-semibold">وزن فعلی / Weight</span>
             <Scale className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
             {liveStats.weight}{" "}
-            <span className="text-xs font-normal text-slate-400">کیلوگرم</span>
+            <span className="text-xs font-normal text-slate-400">kg</span>
           </div>
-          <p className="mt-1 text-[11px] text-emerald-400/90">تراز رده وزنی</p>
+          <p className="mt-1 text-[11px] text-emerald-400/90">WKF Division Align</p>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold">شاخص BMI</span>
+            <span className="text-xs font-semibold">شاخص BMI / Ratio</span>
             <Activity className="h-4 w-4 text-cyan-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
@@ -290,28 +373,28 @@ export function AthleteForm() {
           </div>
           <p className="mt-1 text-[11px] text-cyan-400/90">
             {liveStats.bmi < 18.5
-              ? "کمبود وزن"
+              ? "کمبود وزن / Under"
               : liveStats.bmi < 25
-              ? "مطلوب رقابتی"
-              : "نیاز به بازنگری"}
+              ? "مطلوب / Optimal"
+              : "نیاز به بازنگری / Review"}
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold">توده عضلانی</span>
+            <span className="text-xs font-semibold">توده عضلانی / Muscle</span>
             <Dumbbell className="h-4 w-4 text-amber-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
             {liveStats.muscle}
             <span className="text-xs font-normal text-slate-400">٪</span>
           </div>
-          <p className="mt-1 text-[11px] text-amber-400/90">توان پیش‌رانش</p>
+          <p className="mt-1 text-[11px] text-amber-400/90">توان پیش‌ران / Drive</p>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold">درصد چربی</span>
+            <span className="text-xs font-semibold">درصد چربی / Fat %</span>
             <Flame className="h-4 w-4 text-rose-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
@@ -319,30 +402,30 @@ export function AthleteForm() {
             <span className="text-xs font-normal text-slate-400">٪</span>
           </div>
           <p className="mt-1 text-[11px] text-rose-400/90">
-            {liveStats.bodyFat <= 13 ? "استاندارد کومیته" : "بار مرده"}
+            {liveStats.bodyFat <= 13 ? "استاندارد کومیته / Elite" : "بار مرده / High"}
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-semibold">هیدراتاسیون</span>
+            <span className="text-xs font-semibold">هیدراتاسیون / Water</span>
             <Zap className="h-4 w-4 text-sky-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
             {liveStats.water}
             <span className="text-xs font-normal text-slate-400">٪</span>
           </div>
-          <p className="mt-1 text-[11px] text-sky-400/90">ریکاوری و تعادل</p>
+          <p className="mt-1 text-[11px] text-sky-400/90">ریکاوری / Recovery</p>
         </div>
 
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/20 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between text-emerald-300">
-            <span className="text-xs font-semibold">امتیاز بدن</span>
+            <span className="text-xs font-semibold">امتیاز بدن / Score</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="mt-2 text-xl font-black text-emerald-300">
             {liveStats.score}{" "}
-            <span className="text-xs font-normal text-emerald-400/70">از ۱۰۰</span>
+            <span className="text-xs font-normal text-emerald-400/70">/ 100</span>
           </div>
           <p className="mt-1 text-[11px] text-emerald-400 font-semibold truncate">
             {liveStats.kumiteIndex}
@@ -358,23 +441,23 @@ export function AthleteForm() {
               <div>
                 <CardTitle>
                   <User className="h-5 w-5 text-emerald-400" />
-                  اطلاعات هویتی و عکس سلفی ورزشکار
+                  اطلاعات هویتی و عکس سلفی ورزشکار (Athlete Identity & Live Selfie)
                 </CardTitle>
                 <CardDescription>
-                  ثبت مشخصات شناسنامه‌ای و محاسبه برخط سن بیولوژیکی از روی تاریخ تولد شمسی
+                  ثبت مشخصات شناسنامه‌ای و محاسبه برخط سن بیولوژیکی • Personal identity and automatic age resolution
                 </CardDescription>
               </div>
-              <Badge variant="secondary">گام ۱ از ۲</Badge>
+              <Badge variant="secondary">گام ۱ از ۲ • Step 1/2</Badge>
             </div>
           </CardHeader>
           <CardContent className="grid gap-6 md:grid-cols-12 items-start pt-6">
             <div className="space-y-4 md:col-span-7">
               <div>
-                <Label htmlFor="fullName">نام و نام خانوادگی ورزشکار</Label>
+                <Label htmlFor="fullName">نام و نام خانوادگی ورزشکار / Athlete Full Name</Label>
                 <Input
                   id="fullName"
                   {...register("fullName")}
-                  placeholder="مثال: سجاد کریمی"
+                  placeholder="مثال: سجاد کریمی (Sajad Karimi)"
                 />
                 {errors.fullName && (
                   <p className="mt-1 text-xs text-rose-400">
@@ -385,10 +468,10 @@ export function AthleteForm() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="gender">جنسیت</Label>
+                  <Label htmlFor="gender">جنسیت / Gender</Label>
                   <Select id="gender" {...register("gender")}>
-                    <option value="MALE">مرد (بخش آقایان)</option>
-                    <option value="FEMALE">زن (بخش بانوان)</option>
+                    <option value="MALE">مرد (بخش آقایان) / Male</option>
+                    <option value="FEMALE">زن (بخش بانوان) / Female</option>
                   </Select>
                   {errors.gender && (
                     <p className="mt-1 text-xs text-rose-400">
@@ -399,7 +482,7 @@ export function AthleteForm() {
 
                 <div>
                   <Label htmlFor="birthDateJalali">
-                    تاریخ تولد شمسی (YYYY/MM/DD)
+                    تاریخ تولد شمسی (YYYY/MM/DD) / Jalali Birthdate
                   </Label>
                   <div className="relative">
                     <Input
@@ -423,22 +506,22 @@ export function AthleteForm() {
               <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-3.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-300">
-                    محاسبه دقیق سن از تقویم جلالی:
+                    محاسبه دقیق سن از تقویم جلالی / Exact Resolved Age:
                   </span>
                   {calculatedAge !== null ? (
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-white">
-                        {calculatedAge} سال تمام
+                        {calculatedAge} سال تمام (Yrs)
                       </span>
                       {isAgeValid ? (
-                        <Badge variant="default">رده مجاز باشگاه (۱۰ تا ۵۰)</Badge>
+                        <Badge variant="default">رده مجاز باشگاه (۱۰ تا ۵۰) / Valid</Badge>
                       ) : (
-                        <Badge variant="destructive">خارج از محدوده مجاز</Badge>
+                        <Badge variant="destructive">خارج از محدوده مجاز / Out of Range</Badge>
                       )}
                     </div>
                   ) : (
                     <span className="text-xs text-slate-500">
-                      تاریخ تولد معتبر وارد کنید
+                      تاریخ تولد معتبر وارد کنید (Enter valid Jalali birthdate)
                     </span>
                   )}
                 </div>
@@ -447,7 +530,7 @@ export function AthleteForm() {
 
             {/* Webcam / Portrait Capture on the right */}
             <div className="md:col-span-5">
-              <Label className="mb-2">عکس زنده با وب‌کم (یا بارگذاری تصویر)</Label>
+              <Label className="mb-2">عکس زنده با وب‌کم (یا آپلود تصویر) / Live Selfie or Portrait</Label>
               <Controller
                 control={control}
                 name="selfieDataUrl"
@@ -469,13 +552,13 @@ export function AthleteForm() {
               <div>
                 <CardTitle>
                   <Activity className="h-5 w-5 text-cyan-400" />
-                  ثبت ۲۵ شاخص تله‌متری آنالایزر Xiaomi S400
+                  ثبت ۲۵ شاخص تله‌متری آنالایزر Xiaomi S400 (Biometrics Registry)
                 </CardTitle>
                 <CardDescription>
-                  ثبت پویا بر پایه معماری طرحواره باز (OCP) بدون هاردکد ستون‌های دیتابیس
+                  ثبت پویا بر پایه معماری طرحواره باز • Dynamic Registry & Extensible Telemetry (OCP)
                 </CardDescription>
               </div>
-              <Badge variant="secondary">گام ۲ از ۲</Badge>
+              <Badge variant="secondary">گام ۲ از ۲ • Step 2/2</Badge>
             </div>
 
             {/* Category Filter Tabs */}
@@ -490,13 +573,14 @@ export function AthleteForm() {
                     key={catKey}
                     type="button"
                     onClick={() => setActiveCategory(catKey)}
-                    className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                       isActive
                         ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/40"
                         : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white"
                     }`}
                   >
                     <span>{config.titleFa}</span>
+                    <span className="text-[10px] opacity-75 font-mono">({config.titleEn.split(" ")[0]})</span>
                     <span
                       className={`rounded-full px-1.5 py-0.2 text-[10px] ${
                         isActive
@@ -513,11 +597,12 @@ export function AthleteForm() {
           </CardHeader>
 
           <CardContent className="pt-6">
-            <div className="mb-4 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3 text-xs text-slate-300">
-              <span className="font-bold text-emerald-400">
-                {CATEGORY_LABELS_FA[activeCategory].titleFa}:{" "}
-              </span>
-              {CATEGORY_LABELS_FA[activeCategory].descFa}
+            <div className="mb-4 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5 text-xs text-slate-300 space-y-1">
+              <div className="font-bold text-emerald-400">
+                {CATEGORY_LABELS_FA[activeCategory].titleFa} • {CATEGORY_LABELS_FA[activeCategory].titleEn}
+              </div>
+              <div className="text-slate-300">{CATEGORY_LABELS_FA[activeCategory].descFa}</div>
+              <div className="text-[11px] text-slate-500 font-sans">{CATEGORY_LABELS_FA[activeCategory].descEn}</div>
             </div>
 
             {/* Dynamically mapped inputs */}
@@ -529,7 +614,10 @@ export function AthleteForm() {
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <Label htmlFor={metric.key} className="mb-0 text-slate-200">
-                      {metric.labelFa}
+                      <span>{metric.labelFa}</span>
+                      <span className="text-[10px] text-slate-400 font-mono block">
+                        {metric.nameEn}
+                      </span>
                     </Label>
                     {metric.unit && (
                       <span className="text-[11px] font-mono text-emerald-400/90">
@@ -544,7 +632,7 @@ export function AthleteForm() {
                       {...register(`metrics.${metric.key}` as "metrics.weight")}
                       className="bg-slate-950/80"
                     >
-                      <option value="">انتخاب تیپ بدنی</option>
+                      <option value="">انتخاب تیپ بدنی / Select Type</option>
                       {metric.textOptions?.map((opt) => (
                         <option key={opt.value} value={opt.value}>
                           {opt.labelFa}
@@ -567,7 +655,7 @@ export function AthleteForm() {
                       />
                       {metric.standardRange && (
                         <div className="mt-1 flex items-center justify-between text-[10px] text-slate-500 font-mono">
-                          <span>دامنه مطلوب:</span>
+                          <span>دامنه مطلوب / Optimal:</span>
                           <span>
                             {metric.standardRange.min} - {metric.standardRange.max}{" "}
                             {metric.unit}
@@ -598,7 +686,7 @@ export function AthleteForm() {
                 className="flex items-center gap-1 text-xs text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer"
               >
                 <ChevronRight className="h-4 w-4" />
-                دسته قبلی
+                دسته قبلی / Previous
               </button>
               <button
                 type="button"
@@ -610,7 +698,7 @@ export function AthleteForm() {
                 }}
                 className="flex items-center gap-1 text-xs text-slate-400 hover:text-white disabled:opacity-30 cursor-pointer"
               >
-                دسته بعدی
+                دسته بعدی / Next
                 <ChevronLeft className="h-4 w-4" />
               </button>
             </div>
@@ -627,6 +715,22 @@ export function AthleteForm() {
         {/* Action Trigger Buttons */}
         <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
           <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={handleDownloadSamplePdf}
+            disabled={isExportingSample}
+            className="w-full sm:w-auto"
+          >
+            {isExportingSample ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 text-amber-400" />
+            )}
+            صدور PDF نمونه (Export Sample PDF)
+          </Button>
+
+          <Button
             type="submit"
             disabled={isAnalyzing}
             size="lg"
@@ -635,12 +739,12 @@ export function AthleteForm() {
             {isAnalyzing ? (
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
-                در حال پردازش آنالیز هوش مصنوعی...
+                در حال پردازش هوش مصنوعی... Analyzing...
               </>
             ) : (
               <>
                 <Sparkles className="h-5 w-5" />
-                اجرای آنالیز هوشمند کاراته (Groq AI)
+                اجرای آنالیز هوشمند کاراته / Run AI Analysis
               </>
             )}
           </Button>
@@ -657,12 +761,12 @@ export function AthleteForm() {
               {isGeneratingPdf ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  در حال صدور فایل PDF...
+                  در حال صدور PDF... Generating PDF...
                 </>
               ) : (
                 <>
                   <Download className="h-5 w-5" />
-                  دانلود شناسنامه رسمی (PDF)
+                  دانلود شناسنامه رسمی (PDF) / Download Report
                 </>
               )}
             </Button>
@@ -681,15 +785,15 @@ export function AthleteForm() {
               <div>
                 <CardTitle className="text-emerald-300">
                   <Award className="h-5 w-5 text-emerald-400" />
-                  تحلیل تخصصی مربی ارشد بدنسازی کاراته (Elite Conditioning Coach)
+                  تحلیل تخصصی مربی ارشد بدنسازی کاراته (Elite Karate Conditioning Coach Analysis)
                 </CardTitle>
                 <CardDescription className="text-slate-300">
-                  باشگاه کاراته شرکت برق منطقه ای خراسان • موتور هوش مصنوعی Llama-3 (Groq SDK)
+                  باشگاه کاراته شرکت برق منطقه ای خراسان • Khorasan Regional Electric Karate Club • Llama-3 AI Engine
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="default">
-                  {reportSource === "groq-llama-3" ? "Groq Llama-3" : "الگوریتم تخصصی کاراته"}
+                  {reportSource === "groq-llama-3" ? "Groq Llama-3" : "الگوریتم تخصصی کاراته / Karate Engine"}
                 </Badge>
                 <Button
                   type="button"
@@ -699,7 +803,7 @@ export function AthleteForm() {
                   disabled={isGeneratingPdf}
                 >
                   <FileText className="h-4 w-4" />
-                  دریافت نسخه چاپی PDF
+                  دریافت نسخه چاپی PDF / Print PDF
                 </Button>
               </div>
             </div>
