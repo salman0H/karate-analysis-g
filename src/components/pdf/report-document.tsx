@@ -12,6 +12,7 @@ import {
   METRICS_CONFIG,
   MetricDefinition,
 } from "@/config/metrics.config";
+import { KREC_LOGO_DATA_URI } from "./logo-data";
 
 // Register local Vazirmatn font for Persian RTL typography in react-pdf
 const regularFontPath = path.join(process.cwd(), "public/fonts/Vazirmatn-Regular.ttf");
@@ -60,50 +61,108 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 1.5,
     borderBottomColor: "#059669",
-    paddingBottom: 6,
-    marginBottom: 6,
+    paddingBottom: 5,
+    marginBottom: 4.5,
+  },
+  headerRightGroup: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    flex: 1,
+  },
+  headerLogoBox: {
+    width: 52,
+    height: 52,
+    marginLeft: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerLogoImage: {
+    width: 50,
+    height: 50,
+    objectFit: "contain",
   },
   headerTextGroup: {
     flex: 1,
     textAlign: "right",
-    paddingLeft: 8,
+    alignItems: "flex-end",
   },
   systemPill: {
-    alignSelf: "flex-start",
+    alignSelf: "flex-end",
     backgroundColor: "#ecfdf5",
     borderWidth: 1,
     borderColor: "#a7f3d0",
     borderRadius: 3,
     paddingHorizontal: 5,
     paddingVertical: 1,
-    marginBottom: 2.5,
+    marginBottom: 2,
   },
   systemPillText: {
-    fontSize: 6,
+    fontSize: 5.5,
     color: "#065f46",
     fontWeight: "bold",
   },
   clubTitleFa: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#064e3b",
     letterSpacing: 0.1,
   },
   clubSubtitleFa: {
-    fontSize: 7.5,
+    fontSize: 7,
     fontWeight: "bold",
     color: "#0f172a",
     marginTop: 1,
   },
   clubTitleEn: {
-    fontSize: 5.5,
+    fontSize: 5,
     color: "#64748b",
-    marginTop: 1,
+    marginTop: 0.5,
   },
-  headerRightBadge: {
+  headerLeftGroup: {
     flexDirection: "row-reverse",
     alignItems: "center",
-    gap: 7,
+    gap: 6,
+  },
+
+  // Technical Masters & Leadership Banner
+  mastersBanner: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    backgroundColor: "#f8fafc",
+    borderWidth: 0.75,
+    borderColor: "#cbd5e1",
+    borderRightWidth: 3,
+    borderRightColor: "#059669",
+    borderRadius: 3.5,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    marginBottom: 4.5,
+  },
+  mastersBadge: {
+    backgroundColor: "#059669",
+    borderRadius: 2.5,
+    paddingHorizontal: 4.5,
+    paddingVertical: 1.5,
+    marginLeft: 6,
+  },
+  mastersBadgeText: {
+    fontSize: 5.5,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+  mastersTextCol: {
+    flex: 1,
+    textAlign: "right",
+  },
+  mastersTextFa: {
+    fontSize: 6.8,
+    fontWeight: "bold",
+    color: "#0f172a",
+  },
+  mastersTextEn: {
+    fontSize: 5,
+    color: "#64748b",
+    marginTop: 0.5,
   },
   docMetaBox: {
     alignItems: "flex-end",
@@ -370,59 +429,28 @@ const styles = StyleSheet.create({
     marginBottom: 2.5,
   },
 
-  // Official Technical Signatures & Stamp Block
-  signaturesBlock: {
+  // Report Document Notice Bar
+  reportNoticeBar: {
     flexDirection: "row-reverse",
+    alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 5,
-    paddingTop: 4,
-    borderTopWidth: 0.75,
-    borderTopColor: "#e2e8f0",
-  },
-  sigBox: {
-    flex: 1,
-    textAlign: "center",
-    alignItems: "center",
-    paddingHorizontal: 3,
-  },
-  sigTitleFa: {
-    fontSize: 6,
-    fontWeight: "bold",
-    color: "#1e293b",
-  },
-  sigTitleEn: {
-    fontSize: 4.5,
-    color: "#64748b",
-    marginTop: 0.5,
-  },
-  sigStampCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: "#059669",
-    borderStyle: "dashed",
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 2,
     backgroundColor: "#f0fdf4",
+    borderWidth: 0.75,
+    borderColor: "#bbf7d0",
+    borderRadius: 3,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    marginTop: 4,
+    marginBottom: 3,
   },
-  sigStampText: {
-    fontSize: 4,
-    color: "#065f46",
+  reportNoticeTextFa: {
+    fontSize: 5.6,
+    color: "#166534",
     fontWeight: "bold",
-    textAlign: "center",
   },
-  sigLine: {
-    width: "75%",
-    height: 0.75,
-    backgroundColor: "#cbd5e1",
-    marginTop: 14,
-    marginBottom: 2,
-  },
-  sigSubtitle: {
-    fontSize: 4.5,
-    color: "#94a3b8",
+  reportNoticeTextEn: {
+    fontSize: 4.8,
+    color: "#15803d",
   },
 
   // Footer Bar
@@ -640,26 +668,31 @@ export function ReportDocument({
           <View style={styles.ribbonGold} />
         </View>
 
-        {/* Official Header */}
+        {/* Official Header with High-Resolution Electric Co. Logo */}
         <View style={styles.headerWrapper}>
-          <View style={styles.headerTextGroup}>
-            <View style={styles.systemPill}>
-              <Text style={styles.systemPillText}>
-                سامانه پایش هوشمند فیزیولوژی و بادی‌کامپوزیشن کاراته • Xiaomi S400 Telemetry
+          <View style={styles.headerRightGroup}>
+            <View style={styles.headerLogoBox}>
+              <Image style={styles.headerLogoImage} src={KREC_LOGO_DATA_URI} />
+            </View>
+            <View style={styles.headerTextGroup}>
+              <View style={styles.systemPill}>
+                <Text style={styles.systemPillText}>
+                  سامانه پایش هوشمند فیزیولوژی و بادی‌کامپوزیشن کاراته • Xiaomi S400 Telemetry
+                </Text>
+              </View>
+              <Text style={styles.clubTitleFa}>
+                باشگاه کاراته شرکت برق منطقه ای خراسان
+              </Text>
+              <Text style={styles.clubSubtitleFa}>
+                گزارش تخصصی ارزیابی بیومتریک و آمادگی جسمانی ورزشکار
+              </Text>
+              <Text style={styles.clubTitleEn}>
+                Khorasan Regional Electric Co. Karate Club • Biometric Analytics Report
               </Text>
             </View>
-            <Text style={styles.clubTitleFa}>
-              باشگاه کاراته شرکت برق منطقه ای خراسان
-            </Text>
-            <Text style={styles.clubSubtitleFa}>
-              شناسنامه رسمی ارزیابی بیومتریک و آمادگی جسمانی ورزشکار
-            </Text>
-            <Text style={styles.clubTitleEn}>
-              Khorasan Regional Electric Co. Karate Club • Official Athlete Conditioning Certificate
-            </Text>
           </View>
 
-          <View style={styles.headerRightBadge}>
+          <View style={styles.headerLeftGroup}>
             <View style={styles.docMetaBox}>
               <Text style={styles.docMetaLabel}>کد رهگیری پرونده</Text>
               <Text style={styles.docMetaBold}>{certId}</Text>
@@ -670,6 +703,21 @@ export function ReportDocument({
                 <Image style={styles.selfieImage} src={selfieDataUrl} />
               </View>
             ) : null}
+          </View>
+        </View>
+
+        {/* Technical Masters & Leadership Banner */}
+        <View style={styles.mastersBanner}>
+          <View style={styles.mastersBadge}>
+            <Text style={styles.mastersBadgeText}>اساتید تیم و کادر فنی</Text>
+          </View>
+          <View style={styles.mastersTextCol}>
+            <Text style={styles.mastersTextFa}>
+              شیهان کریمی و شیهان غفاری (اساتید تیم کاراته شرکت برق منطقه ای خراسان)
+            </Text>
+            <Text style={styles.mastersTextEn}>
+              Team Masters: Shihan Karimi & Shihan Ghaffari (Khorasan Regional Electric Co. Karate Team)
+            </Text>
           </View>
         </View>
 
@@ -958,43 +1006,26 @@ export function ReportDocument({
           </View>
         </View>
 
-        {/* Section: Official Verification & Signatures */}
-        <View style={styles.signaturesBlock}>
-          <View style={styles.sigBox}>
-            <Text style={styles.sigTitleFa}>مربی ارشد بدنسازی و کومیته</Text>
-            <Text style={styles.sigTitleEn}>Head Karate Conditioning Coach</Text>
-            <View style={styles.sigLine} />
-            <Text style={styles.sigSubtitle}>امضا و تاریخ تأیید فنی</Text>
-          </View>
-
-          <View style={styles.sigBox}>
-            <Text style={styles.sigTitleFa}>مهر و تأییدیه رسمی باشگاه</Text>
-            <Text style={styles.sigTitleEn}>Official Club Seal & Stamp</Text>
-            <View style={styles.sigStampCircle}>
-              <Text style={styles.sigStampText}>باشگاه برق</Text>
-              <Text style={styles.sigStampText}>خراسان</Text>
-            </View>
-            <Text style={styles.sigSubtitle}>واحد سنجش و سلامت بدنی</Text>
-          </View>
-
-          <View style={styles.sigBox}>
-            <Text style={styles.sigTitleFa}>پزشک و فیزیولوژیست ورزشی</Text>
-            <Text style={styles.sigTitleEn}>Sports Medicine & Physiologist</Text>
-            <View style={styles.sigLine} />
-            <Text style={styles.sigSubtitle}>شماره گواهی سنجش سلامت</Text>
-          </View>
+        {/* Analytical Report Notice */}
+        <View style={styles.reportNoticeBar}>
+          <Text style={styles.reportNoticeTextFa}>
+            این کارنامه یک گزارش تحلیلی تخصصی از ترکیب بدنی ورزشکار بوده و مبنای تنظیم پروتکل‌های تمرینی کومیته و کاتا می‌باشد.
+          </Text>
+          <Text style={styles.reportNoticeTextEn}>
+            Biometric Performance Analytics • Internal Technical Record
+          </Text>
         </View>
 
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerTextRight}>
-            صادر شده توسط واحد سنجش و سلامت بدنی باشگاه کاراته شرکت برق منطقه ای خراسان
+            باشگاه کاراته شرکت برق منطقه ای خراسان • واحد سنجش و ارتقای عملکرد قهرمانی
           </Text>
           <Text style={styles.footerTextCenter}>
-            صفحه ۱ از ۱ • سند رسمی غیرقابل جعل
+            صفحه ۱ از ۱ • گزارش تحلیلی تخصصی
           </Text>
           <Text style={styles.footerTextLeft}>
-            Smart Karate Body Analytics Engine • S400 Protocol
+            KREC Karate Performance Telemetry • Xiaomi S400 Protocol
           </Text>
         </View>
       </Page>

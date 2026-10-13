@@ -44,13 +44,36 @@ export default function Home() {
                 <span>وزارت نیرو • شرکت سهامی برق منطقه‌ای خراسان (KREC)</span>
               </div>
 
-              <div>
-                <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
-                  باشگاه کاراته شرکت برق منطقه ای خراسان
-                </h1>
-                <p className="mt-1 text-xs sm:text-sm font-semibold tracking-wide text-emerald-400 font-mono">
-                  Khorasan Regional Electric Company Karate Club • Smart Body Analytics System
-                </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="relative h-20 w-20 shrink-0 rounded-2xl bg-white/5 p-2 border border-emerald-500/30 backdrop-blur-md shadow-xl shadow-emerald-950/40">
+                  <img
+                    src="/images/krec-logo.png"
+                    alt="لوگوی شرکت سهامی برق منطقه‌ای خراسان"
+                    className="h-full w-full object-contain filter drop-shadow-md"
+                  />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-black tracking-tight text-white sm:text-4xl">
+                    باشگاه کاراته شرکت برق منطقه ای خراسان
+                  </h1>
+                  <p className="mt-1 text-xs sm:text-sm font-semibold tracking-wide text-emerald-400 font-mono">
+                    Khorasan Regional Electric Company Karate Club • Smart Body Analytics System
+                  </p>
+                </div>
+              </div>
+
+              {/* Technical Masters & Head Coaches Banner */}
+              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2 text-xs backdrop-blur-md">
+                <span className="font-bold text-amber-400">اساتید تیم:</span>
+                <span className="font-bold text-white">شیهان کریمی</span>
+                <span className="text-amber-400 font-bold">•</span>
+                <span className="font-bold text-white">شیهان غفاری</span>
+                <span className="text-amber-200/90 font-medium">
+                  (اساتید تیم کاراته شرکت برق منطقه ای خراسان)
+                </span>
+                <span className="hidden md:inline text-[11px] text-amber-400/80 font-mono border-r border-amber-500/30 pr-2 mr-1">
+                  Team Masters: Shihan Karimi & Shihan Ghaffari
+                </span>
               </div>
 
               <p className="max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
