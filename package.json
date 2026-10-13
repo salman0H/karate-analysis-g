@@ -8,10 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "import:data": "tsx scripts/import-data.ts",
+    "generate:pdfs": "tsx scripts/generate-athlete-pdfs.mts"
   },
   "dependencies": {
+    "@next/env": "16.4.0",
     "@hookform/resolvers": "^5.9.1",
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@react-pdf/renderer": "^4.9.0",
     "class-variance-authority": "^0.7.1",
@@ -21,6 +25,7 @@
     "groq-sdk": "^1.6.0",
     "lucide-react": "^1.55.0",
     "next": "16.4.0",
+    "pg": "^8.23.1",
     "prisma": "^7.10.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -32,11 +37,13 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "tsx": "^4.23.15"
   }
 }

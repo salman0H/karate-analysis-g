@@ -481,13 +481,14 @@ const styles = StyleSheet.create({
 
 interface ReportDocumentProps {
   fullName: string;
-  gender: "MALE" | "FEMALE";
-  age: number;
-  birthDateJalali: string;
-  metrics: Record<string, number | string>;
+  gender: "MALE" | "FEMALE" | null;
+  age: number | null;
+  birthDateJalali: string | null;
+  metrics: Record<string, number | string | null>;
   selfieDataUrl?: string | null;
   report: string;
   generatedAt: string;
+  dataOnly?: boolean;
 }
 
 // Persian numerals converter for pure RTL text flow
@@ -547,7 +548,7 @@ function sanitizeAiReportParagraphs(raw: string): string[] {
 // Helper to render metric values safely in RTL
 function renderMetricValue(
   def: MetricDefinition,
-  val: number | string | undefined
+  val: number | string | null | undefined
 ) {
   if (val === undefined || val === null || val === "" || val === "-") {
     return (
@@ -598,6 +599,7 @@ export function ReportDocument({
   selfieDataUrl,
   report,
   generatedAt,
+  dataOnly = false,
 }: ReportDocumentProps) {
   const { nameFa, nameEn } = parseAthleteName(fullName);
 
@@ -657,7 +659,7 @@ export function ReportDocument({
   const reportParagraphs = sanitizeAiReportParagraphs(report);
 
   // Unique document tracking code
-  const certId = `KBAS-1405-${String(fullName).length * 17 + Number(age || 20)}`;
+  const certId = `KBAS-1405-${String(fullName).length * 17 + (age ?? 0)}`;
 
   return (
     <Document>
@@ -734,20 +736,28 @@ export function ReportDocument({
             <Text style={styles.dossierLabelFa}>جنسیت و رده مسابقاتی</Text>
             <Text style={styles.dossierLabelEn}>Gender / Division</Text>
             <Text style={styles.dossierValue}>
-              {gender === "MALE" ? "مرد (بخش آقایان)" : "زن (بخش بانوان)"}
+              {gender === null
+                ? "ثبت نشده"
+                : gender === "MALE"
+                  ? "مرد (بخش آقایان)"
+                  : "زن (بخش بانوان)"}
             </Text>
           </View>
 
           <View style={styles.dossierCol}>
             <Text style={styles.dossierLabelFa}>تاریخ تولد (شمسی)</Text>
             <Text style={styles.dossierLabelEn}>Birthdate (Jalali)</Text>
-            <Text style={styles.dossierValue}>{toPersianDigits(birthDateJalali)}</Text>
+            <Text style={styles.dossierValue}>
+              {birthDateJalali ? toPersianDigits(birthDateJalali) : "ثبت نشده"}
+            </Text>
           </View>
 
           <View style={styles.dossierCol}>
             <Text style={styles.dossierLabelFa}>سن تقویمی</Text>
             <Text style={styles.dossierLabelEn}>Chronological Age</Text>
-            <Text style={styles.dossierValue}>{toPersianDigits(age)} سال تمام</Text>
+            <Text style={styles.dossierValue}>
+              {age === null ? "ثبت نشده" : `${toPersianDigits(age)} سال تمام`}
+            </Text>
           </View>
 
           <View style={styles.dossierCol}>
@@ -987,14 +997,20 @@ export function ReportDocument({
           <View style={styles.aiHeader}>
             <View style={styles.aiHeaderRight}>
               <Text style={styles.aiTitleFa}>
-                تحلیل تخصصی مربی ارشد و کارشناس فیزیولوژی کاراته
+                {dataOnly
+                  ? "گزارش هوش مصنوعی در داده‌های ورودی ارائه نشده است"
+                  : "تحلیل تخصصی مربی ارشد و کارشناس فیزیولوژی کاراته"}
               </Text>
               <Text style={styles.aiTitleEn}>
-                Elite Karate Conditioning Analysis • Groq Llama-3 AI Engine
+                {dataOnly
+                  ? "No AI-generated coaching report was supplied"
+                  : "Elite Karate Conditioning Analysis • Groq Llama-3 AI Engine"}
               </Text>
             </View>
             <View style={styles.aiBadge}>
-              <Text style={styles.aiBadgeText}>تأییدیه هوشمند کومیته</Text>
+              <Text style={styles.aiBadgeText}>
+                {dataOnly ? "فقط داده‌های اندازه‌گیری" : "تأییدیه هوشمند کومیته"}
+              </Text>
             </View>
           </View>
           <View style={styles.aiBody}>
@@ -1009,10 +1025,14 @@ export function ReportDocument({
         {/* Analytical Report Notice */}
         <View style={styles.reportNoticeBar}>
           <Text style={styles.reportNoticeTextFa}>
-            این کارنامه یک گزارش تحلیلی تخصصی از ترکیب بدنی ورزشکار بوده و مبنای تنظیم پروتکل‌های تمرینی کومیته و کاتا می‌باشد.
+            {dataOnly
+              ? "این خروجی فقط داده‌های ارائه‌شده را نمایش می‌دهد و جایگزین تفسیر مربی یا ارزیابی تخصصی پزشکی نیست."
+              : "این کارنامه یک گزارش تحلیلی تخصصی از ترکیب بدنی ورزشکار بوده و مبنای تنظیم پروتکل‌های تمرینی کومیته و کاتا می‌باشد."}
           </Text>
           <Text style={styles.reportNoticeTextEn}>
-            Biometric Performance Analytics • Internal Technical Record
+            {dataOnly
+              ? "Data-only export • No medical or coaching assessment"
+              : "Biometric Performance Analytics • Internal Technical Record"}
           </Text>
         </View>
 

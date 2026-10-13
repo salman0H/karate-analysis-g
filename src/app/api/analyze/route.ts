@@ -66,7 +66,12 @@ function generateDeterministicKarateReport(payload: AnalyzeRequestPayload): stri
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = (await request.json()) as AnalyzeRequestPayload;
+    const body = (await request.json()) as AnalyzeRequestPayload & {
+      requireGroq?: boolean;
+      measuredAt?: string;
+    };
+    const payload = body;
+    const requireGroq = body.requireGroq === true;
 
     if (!payload.fullName || !payload.metrics) {
       return NextResponse.json(
@@ -76,6 +81,13 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.GROQ_API_KEY;
+
+    if (requireGroq && (!apiKey || !apiKey.trim() || apiKey.includes("your_groq_api_key"))) {
+      return NextResponse.json(
+        { error: "کلید GROQ_API_KEY تنظیم نشده است؛ آن را در .env.local قرار دهید و سرور را دوباره اجرا کنید." },
+        { status: 503 }
+      );
+    }
 
     // If Groq API Key is present, call Groq Llama-3 model
     if (apiKey && apiKey.trim().length > 0 && !apiKey.includes("your_groq_api_key")) {
@@ -91,12 +103,14 @@ export async function POST(request: NextRequest) {
 ۴. نقاط ضعف و ریسک‌های موجود با زبان فنی مربیگری.
 ۵. یک پروتکل ۴ هفته‌ای مشخص تمرینی و تغذیه‌ای به تفکیک هفته‌ها.
 قانون کلیدی: ممکن است برخی از فاکتورها توسط دستگاه اندازه گیری نشده باشند یا در فرم در حالت «عدم اعمال» قرار گرفته باشند (در لیست ورودی غایب باشند). به هیچ وجه اعدادی را برای فاکتورهای غایب حدس نزنید یا جعل نکنید؛ تحلیل را منحصراً بر پایه فاکتورهای اعمال‌شده و موجود ارائه دهید.
+اگر جنسیت یا سن تقویمی ارائه نشده است، از دسته‌بندی‌های وابسته به سن/جنسیت، نتیجه‌گیری درباره BMI، تجویز کالری یا کاهش وزن تهاجمی خودداری کنید. این گزارش تشخیص پزشکی نیست و برای ورزشکار نوجوان، برنامه تغذیه/تمرین باید با نظارت مربی و متخصص واجد صلاحیت باشد.
 زبان خروجی: کاملاً فارسی روان، تخصصی با اصطلاحات کاراته و بدون مقدمه‌چینی زائد.`;
 
         const userPrompt = `مشخصات ورزشکار:
 نام و نام خانوادگی: ${payload.fullName}
-جنسیت: ${payload.gender === "MALE" ? "مرد" : "زن"}
-سن: ${payload.age} سال
+جنسیت: ${payload.gender === "MALE" ? "مرد" : payload.gender === "FEMALE" ? "زن" : "ارائه نشده"}
+سن تقویمی: ${Number.isFinite(payload.age) ? `${payload.age} سال` : "ارائه نشده"}
+زمان اندازه‌گیری: ${body.measuredAt ?? "ارائه نشده"}
 باشگاه: باشگاه کاراته شرکت برق منطقه ای خراسان
 
 شاخص‌های آنالیز اسکن بدن (Xiaomi S400):
@@ -122,9 +136,29 @@ ${metricsSummary}
             generatedAt: new Date().toISOString(),
           });
         }
+        if (requireGroq) {
+          return NextResponse.json(
+            { error: "Groq پاسخی برای گزارش تحلیل برنگرداند." },
+            { status: 502 }
+          );
+        }
       } catch (groqError) {
+        if (requireGroq) {
+          console.error("Required Groq analysis failed:", groqError);
+          return NextResponse.json(
+            { error: "ارتباط با Groq ناموفق بود؛ گزارش محلی جایگزین تولید نشد." },
+            { status: 502 }
+          );
+        }
         console.warn("Groq API call encountered an issue, falling back to local engine:", groqError);
       }
+    }
+
+    if (requireGroq) {
+      return NextResponse.json(
+        { error: "برای تولید گزارش باید GROQ_API_KEY معتبر تنظیم شده باشد." },
+        { status: 503 }
+      );
     }
 
     // Fallback deterministic karate conditioning engine

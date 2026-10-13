@@ -43,9 +43,9 @@ npm install
 cp .env.example .env.local
 ```
 
-مقادیر زیر را در `.env.local` مقداردهی کنید:
+کلید واقعی را فقط در `.env.local` قرار دهید، نه در مخزن:
 ```env
-GROQ_API_KEY="your_groq_api_key_here"
+GROQ_API_KEY="کلید-واقعی-ساخته-شده-در-console.groq.com"
 DATABASE_URL="postgresql://user:password@localhost:5432/karate_analytics?schema=public"
 ```
 
@@ -54,6 +54,43 @@ DATABASE_URL="postgresql://user:password@localhost:5432/karate_analytics?schema=
 npx prisma generate
 npx prisma db push
 ```
+
+### واردکردن داده‌های اندازه‌گیری
+
+پس از تنظیم `DATABASE_URL` در `.env.local` و همگام‌سازی دیتابیس، اطلاعات واقعی
+جنسیت، تاریخ تولد شمسی و سن هر ورزشکار را در `athleteProfiles` در
+`scripts/import-data.ts` وارد کنید؛ اسکریپت این مقادیر را حدس نمی‌زند و اگر کامل
+نباشند، پیش از اتصال به دیتابیس متوقف می‌شود. سپس اجرا کنید:
+
+```bash
+npm run import:data
+```
+
+داده‌ها در `scripts/athlete-import-data.json` نگهداری می‌شوند. اجرای دوباره،
+آنالیز همان ورزشکار در همان زمان اندازه‌گیری را به‌روزرسانی می‌کند و آنالیزهای
+با زمان متفاوت را به‌عنوان رکورد جدید ثبت می‌کند.
+
+### تولید PDF برای داده‌های ورودی
+
+ابتدا سرور برنامه را اجرا کنید:
+
+```bash
+npm run dev
+```
+
+سپس در ترمینال دیگری، برای ساخت PDF جداگانه برای هر رکورد JSON (بدون اتصال به
+دیتابیس) اجرا کنید:
+
+```bash
+npm run generate:pdfs
+```
+
+فایل‌ها در `generated-reports/` ساخته می‌شوند. برای هر ورزشکار گزارش از Groq
+گرفته و داخل PDF قرار می‌گیرد. اگر کلید معتبر یا پاسخ Groq موجود نباشد، اسکریپت
+خطا می‌دهد و گزارش محلی را به‌عنوان خروجی هوش مصنوعی جا نمی‌زند. چون داده ورودی
+جنسیت، سن و تاریخ تولد ندارد، این موارد در PDF «ثبت نشده» می‌مانند.
+اگر قبلاً کلید واقعی را در `.env.example` قرار داده‌اید، آن را در پنل Groq باطل
+و کلید تازه‌ای را فقط در `.env.local` نگهداری کنید.
 
 ### ۴. اجرای برنامه
 ```bash

@@ -5,12 +5,29 @@ import { getTodayJalaliString } from "@/lib/jalali";
 
 interface PdfRequestBody {
   fullName: string;
-  gender: "MALE" | "FEMALE";
-  age: number;
-  birthDateJalali: string;
-  metrics: Record<string, number | string>;
+  gender: "MALE" | "FEMALE" | null;
+  age: number | null;
+  birthDateJalali: string | null;
+  metrics: Record<string, number | string | null>;
   selfieDataUrl?: string | null;
   report: string;
+  dataOnly?: boolean;
+}
+
+function createReportDocument(body: PdfRequestBody) {
+  return (
+    <ReportDocument
+      fullName={body.fullName}
+      gender={body.gender ?? null}
+      age={body.age ?? null}
+      birthDateJalali={body.birthDateJalali ?? null}
+      metrics={body.metrics}
+      selfieDataUrl={body.selfieDataUrl}
+      report={body.report}
+      generatedAt={getTodayJalaliString()}
+      dataOnly={body.dataOnly ?? false}
+    />
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -24,22 +41,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const generatedAt = getTodayJalaliString();
-
-    const documentElement = (
-      <ReportDocument
-        fullName={body.fullName}
-        gender={body.gender}
-        age={body.age}
-        birthDateJalali={body.birthDateJalali}
-        metrics={body.metrics}
-        selfieDataUrl={body.selfieDataUrl}
-        report={body.report}
-        generatedAt={generatedAt}
-      />
-    );
-
-    const pdfBuffer = await renderToBuffer(documentElement);
+    const pdfBuffer = await renderToBuffer(createReportDocument(body));
 
     const safeFilename = encodeURIComponent(
       `گزارش-آنالیز-${body.fullName.replace(/\s+/g, "_")}.pdf`
