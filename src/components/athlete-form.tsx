@@ -9,6 +9,7 @@ import {
   PRESET_ATHLETES,
   SAMPLE_ATHLETE_EXPORT,
   getDefaultMetricsValues,
+  getDefaultEnabledMetrics,
   MetricCategory,
 } from "@/config/metrics.config";
 import {
@@ -47,6 +48,9 @@ import {
   AlertCircle,
   Dumbbell,
   Scale,
+  Check,
+  X,
+  SlidersHorizontal,
 } from "lucide-react";
 
 const CATEGORY_LIST: MetricCategory[] = [
@@ -83,15 +87,36 @@ export function AthleteForm() {
       birthDateJalali: "1381/04/10",
       selfieDataUrl: null,
       metrics: getDefaultMetricsValues(),
+      enabledMetrics: getDefaultEnabledMetrics(),
     },
     mode: "onBlur",
   });
 
   const birthDateJalali = watch("birthDateJalali");
   const watchedMetrics = watch("metrics");
+  const watchedEnabledMetrics = watch("enabledMetrics");
   const watchedFullName = watch("fullName");
   const watchedGender = watch("gender");
   const watchedSelfie = watch("selfieDataUrl");
+
+  // Toggle handlers for individual metrics and categories
+  const toggleMetric = (key: string) => {
+    const isCurrentlyOn = watchedEnabledMetrics?.[key] !== false;
+    setValue(`enabledMetrics.${key}`, !isCurrentlyOn, { shouldDirty: true });
+  };
+
+  const setCategoryMetricsEnabled = (category: MetricCategory, enabled: boolean) => {
+    const catMetrics = METRICS_CONFIG.filter((m) => m.category === category);
+    for (const m of catMetrics) {
+      setValue(`enabledMetrics.${m.key}`, enabled, { shouldDirty: true });
+    }
+  };
+
+  const setAllMetricsEnabled = (enabled: boolean) => {
+    for (const m of METRICS_CONFIG) {
+      setValue(`enabledMetrics.${m.key}`, enabled, { shouldDirty: true });
+    }
+  };
 
   // Exact age calculated reactively from Jalali birthdate in useEffect
   const [calculatedAge, setCalculatedAge] = useState<number | null>(null);
@@ -104,19 +129,53 @@ export function AthleteForm() {
 
   // Real-time KPI summaries for the martial arts HUD
   const liveStats = useMemo(() => {
-    const weight = Number(watchedMetrics?.weight) || 68;
-    const bmi = Number(watchedMetrics?.bmi) || 22;
-    const bodyFat = Number(watchedMetrics?.bodyFatPercentage) || 12;
-    const muscle = Number(watchedMetrics?.musclePercentage) || 82;
-    const water = Number(watchedMetrics?.bodyWaterPercentage) || 64;
-    const score = Number(watchedMetrics?.bodyScore) || 90;
+    const isWeightOn = watchedEnabledMetrics?.weight !== false;
+    const isBmiOn = watchedEnabledMetrics?.bmi !== false;
+    const isFatOn = watchedEnabledMetrics?.bodyFatPercentage !== false;
+    const isMuscleOn = watchedEnabledMetrics?.musclePercentage !== false;
+    const isWaterOn = watchedEnabledMetrics?.bodyWaterPercentage !== false;
+    const isScoreOn = watchedEnabledMetrics?.bodyScore !== false;
+
+    const weight = isWeightOn && watchedMetrics?.weight !== undefined && watchedMetrics?.weight !== ""
+      ? Number(watchedMetrics.weight)
+      : null;
+    const bmi = isBmiOn && watchedMetrics?.bmi !== undefined && watchedMetrics?.bmi !== ""
+      ? Number(watchedMetrics.bmi)
+      : null;
+    const bodyFat = isFatOn && watchedMetrics?.bodyFatPercentage !== undefined && watchedMetrics?.bodyFatPercentage !== ""
+      ? Number(watchedMetrics.bodyFatPercentage)
+      : null;
+    const muscle = isMuscleOn && watchedMetrics?.musclePercentage !== undefined && watchedMetrics?.musclePercentage !== ""
+      ? Number(watchedMetrics.musclePercentage)
+      : null;
+    const water = isWaterOn && watchedMetrics?.bodyWaterPercentage !== undefined && watchedMetrics?.bodyWaterPercentage !== ""
+      ? Number(watchedMetrics.bodyWaterPercentage)
+      : null;
+    const score = isScoreOn && watchedMetrics?.bodyScore !== undefined && watchedMetrics?.bodyScore !== ""
+      ? Number(watchedMetrics.bodyScore)
+      : null;
 
     let kumiteIndex = "انفجاری";
-    if (bodyFat > 16) kumiteIndex = "نیاز به چربی‌سوزی";
-    else if (muscle > 80) kumiteIndex = "کلاس جهانی (WKF)";
+    if (bodyFat !== null && bodyFat > 16) kumiteIndex = "نیاز به چربی‌سوزی";
+    else if (muscle !== null && muscle > 80) kumiteIndex = "کلاس جهانی (WKF)";
+    else if (muscle === null && bodyFat === null) kumiteIndex = "سنجش اختصاصی";
 
-    return { weight, bmi, bodyFat, muscle, water, score, kumiteIndex };
-  }, [watchedMetrics]);
+    return {
+      weight,
+      bmi,
+      bodyFat,
+      muscle,
+      water,
+      score,
+      kumiteIndex,
+      isWeightOn,
+      isBmiOn,
+      isFatOn,
+      isMuscleOn,
+      isWaterOn,
+      isScoreOn,
+    };
+  }, [watchedMetrics, watchedEnabledMetrics]);
 
   const handleApplyPreset = (presetIndex: number) => {
     const preset = PRESET_ATHLETES[presetIndex];
@@ -131,6 +190,7 @@ export function AthleteForm() {
         ...getDefaultMetricsValues(),
         ...preset.metrics,
       },
+      enabledMetrics: getDefaultEnabledMetrics(),
     });
     setReport(null);
     setFormError(null);
@@ -152,6 +212,20 @@ export function AthleteForm() {
       return;
     }
 
+    // Filter only enabled metrics that were measured/applied
+    const enabledMap = data.enabledMetrics ?? {};
+    const appliedMetrics: Record<string, number | string> = {};
+    for (const [key, val] of Object.entries(data.metrics)) {
+      if (enabledMap[key] !== false && val !== undefined && val !== null && val !== "") {
+        appliedMetrics[key] = val;
+      }
+    }
+
+    if (Object.keys(appliedMetrics).length === 0) {
+      setFormError("حداقل یک فاکتور از شاخص‌های بدنی باید در حالت «اعمال شده» قرار داشته باشد.");
+      return;
+    }
+
     setIsAnalyzing(true);
     try {
       const response = await fetch("/api/analyze", {
@@ -162,7 +236,7 @@ export function AthleteForm() {
           gender: data.gender,
           age,
           birthDateJalali: data.birthDateJalali,
-          metrics: data.metrics,
+          metrics: appliedMetrics,
           clubName: "باشگاه کاراته شرکت برق منطقه ای خراسان",
         }),
       });
@@ -182,6 +256,7 @@ export function AthleteForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          metrics: appliedMetrics,
           aiReport: resData.report,
         }),
       }).catch((e) => console.log("DB sync note:", e));
@@ -203,6 +278,15 @@ export function AthleteForm() {
   const handleDownloadPdf = async () => {
     if (!report || !calculatedAge) return;
 
+    // Filter only applied metrics for PDF document
+    const enabledMap = watchedEnabledMetrics ?? {};
+    const appliedMetrics: Record<string, number | string> = {};
+    for (const [key, val] of Object.entries(watchedMetrics ?? {})) {
+      if (enabledMap[key] !== false && val !== undefined && val !== null && val !== "") {
+        appliedMetrics[key] = val;
+      }
+    }
+
     setIsGeneratingPdf(true);
     try {
       const response = await fetch("/api/pdf", {
@@ -213,7 +297,7 @@ export function AthleteForm() {
           gender: watchedGender,
           age: calculatedAge,
           birthDateJalali,
-          metrics: watchedMetrics,
+          metrics: appliedMetrics,
           selfieDataUrl: watchedSelfie,
           report,
         }),
@@ -277,6 +361,7 @@ export function AthleteForm() {
       birthDateJalali: SAMPLE_ATHLETE_EXPORT.birthDateJalali,
       selfieDataUrl: SAMPLE_ATHLETE_EXPORT.selfieDataUrl,
       metrics: SAMPLE_ATHLETE_EXPORT.metrics,
+      enabledMetrics: getDefaultEnabledMetrics(),
     });
     setReport(SAMPLE_ATHLETE_EXPORT.report);
     setReportSource("sample-data");
@@ -351,84 +436,166 @@ export function AthleteForm() {
 
       {/* Realtime Karate Biometrics HUD */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isWeightOn
+              ? "border-slate-800 bg-slate-900/50"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold">وزن فعلی / Weight</span>
             <Scale className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
-            {liveStats.weight}{" "}
-            <span className="text-xs font-normal text-slate-400">kg</span>
+            {liveStats.isWeightOn && liveStats.weight !== null ? (
+              <>
+                {liveStats.weight}{" "}
+                <span className="text-xs font-normal text-slate-400">kg</span>
+              </>
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
-          <p className="mt-1 text-[11px] text-emerald-400/90">WKF Division Align</p>
+          <p className="mt-1 text-[11px] text-emerald-400/90">
+            {liveStats.isWeightOn ? "WKF Division Align" : "اندازه‌گیری نشده"}
+          </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isBmiOn
+              ? "border-slate-800 bg-slate-900/50"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold">شاخص BMI / Ratio</span>
             <Activity className="h-4 w-4 text-cyan-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
-            {liveStats.bmi}
+            {liveStats.isBmiOn && liveStats.bmi !== null ? (
+              liveStats.bmi
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
           <p className="mt-1 text-[11px] text-cyan-400/90">
-            {liveStats.bmi < 18.5
-              ? "کمبود وزن / Under"
-              : liveStats.bmi < 25
-              ? "مطلوب / Optimal"
-              : "نیاز به بازنگری / Review"}
+            {liveStats.isBmiOn && liveStats.bmi !== null
+              ? liveStats.bmi < 18.5
+                ? "کمبود وزن / Under"
+                : liveStats.bmi < 25
+                ? "مطلوب / Optimal"
+                : "نیاز به بازنگری / Review"
+              : "اندازه‌گیری نشده"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isMuscleOn
+              ? "border-slate-800 bg-slate-900/50"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold">توده عضلانی / Muscle</span>
             <Dumbbell className="h-4 w-4 text-amber-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
-            {liveStats.muscle}
-            <span className="text-xs font-normal text-slate-400">٪</span>
+            {liveStats.isMuscleOn && liveStats.muscle !== null ? (
+              <>
+                {liveStats.muscle}
+                <span className="text-xs font-normal text-slate-400">٪</span>
+              </>
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
-          <p className="mt-1 text-[11px] text-amber-400/90">توان پیش‌ران / Drive</p>
+          <p className="mt-1 text-[11px] text-amber-400/90">
+            {liveStats.isMuscleOn ? "توان پیش‌ران / Drive" : "اندازه‌گیری نشده"}
+          </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isFatOn
+              ? "border-slate-800 bg-slate-900/50"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold">درصد چربی / Fat %</span>
             <Flame className="h-4 w-4 text-rose-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
-            {liveStats.bodyFat}
-            <span className="text-xs font-normal text-slate-400">٪</span>
+            {liveStats.isFatOn && liveStats.bodyFat !== null ? (
+              <>
+                {liveStats.bodyFat}
+                <span className="text-xs font-normal text-slate-400">٪</span>
+              </>
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
           <p className="mt-1 text-[11px] text-rose-400/90">
-            {liveStats.bodyFat <= 13 ? "استاندارد کومیته / Elite" : "بار مرده / High"}
+            {liveStats.isFatOn && liveStats.bodyFat !== null
+              ? liveStats.bodyFat <= 13
+                ? "استاندارد کومیته / Elite"
+                : "بار مرده / High"
+              : "اندازه‌گیری نشده"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isWaterOn
+              ? "border-slate-800 bg-slate-900/50"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-xs font-semibold">هیدراتاسیون / Water</span>
             <Zap className="h-4 w-4 text-sky-400" />
           </div>
           <div className="mt-2 text-xl font-black text-white">
-            {liveStats.water}
-            <span className="text-xs font-normal text-slate-400">٪</span>
+            {liveStats.isWaterOn && liveStats.water !== null ? (
+              <>
+                {liveStats.water}
+                <span className="text-xs font-normal text-slate-400">٪</span>
+              </>
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
-          <p className="mt-1 text-[11px] text-sky-400/90">ریکاوری / Recovery</p>
+          <p className="mt-1 text-[11px] text-sky-400/90">
+            {liveStats.isWaterOn ? "ریکاوری / Recovery" : "اندازه‌گیری نشده"}
+          </p>
         </div>
 
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-950/20 p-4 backdrop-blur-md">
+        <div
+          className={`rounded-2xl border p-4 backdrop-blur-md transition-all ${
+            liveStats.isScoreOn
+              ? "border-emerald-500/30 bg-emerald-950/20"
+              : "border-slate-800/50 bg-slate-950/30 opacity-60"
+          }`}
+        >
           <div className="flex items-center justify-between text-emerald-300">
             <span className="text-xs font-semibold">امتیاز بدن / Score</span>
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
           </div>
           <div className="mt-2 text-xl font-black text-emerald-300">
-            {liveStats.score}{" "}
-            <span className="text-xs font-normal text-emerald-400/70">/ 100</span>
+            {liveStats.isScoreOn && liveStats.score !== null ? (
+              <>
+                {liveStats.score}{" "}
+                <span className="text-xs font-normal text-emerald-400/70">/ 100</span>
+              </>
+            ) : (
+              <span className="text-sm font-semibold text-slate-500">عدم اعمال</span>
+            )}
           </div>
           <p className="mt-1 text-[11px] text-emerald-400 font-semibold truncate">
-            {liveStats.kumiteIndex}
+            {liveStats.isScoreOn ? liveStats.kumiteIndex : "اندازه‌گیری نشده"}
           </p>
         </div>
       </div>
@@ -565,7 +732,11 @@ export function AthleteForm() {
             <div className="flex flex-wrap gap-1.5 pt-3">
               {CATEGORY_LIST.map((catKey) => {
                 const config = CATEGORY_LABELS_FA[catKey];
-                const count = METRICS_CONFIG.filter((m) => m.category === catKey).length;
+                const catMetrics = METRICS_CONFIG.filter((m) => m.category === catKey);
+                const count = catMetrics.length;
+                const activeCount = catMetrics.filter(
+                  (m) => watchedEnabledMetrics?.[m.key] !== false
+                ).length;
                 const isActive = activeCategory === catKey;
 
                 return (
@@ -580,15 +751,20 @@ export function AthleteForm() {
                     }`}
                   >
                     <span>{config.titleFa}</span>
-                    <span className="text-[10px] opacity-75 font-mono">({config.titleEn.split(" ")[0]})</span>
+                    <span className="text-[10px] opacity-75 font-mono">
+                      ({config.titleEn.split(" ")[0]})
+                    </span>
                     <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
                         isActive
                           ? "bg-emerald-800 text-white"
-                          : "bg-slate-900 text-slate-400"
+                          : activeCount > 0
+                          ? "bg-slate-900 text-emerald-400"
+                          : "bg-slate-900 text-slate-500"
                       }`}
+                      title={`${activeCount} از ${count} فاکتور در حالت اعمال شده است`}
                     >
-                      {count}
+                      {activeCount}/{count}
                     </span>
                   </button>
                 );
@@ -597,81 +773,202 @@ export function AthleteForm() {
           </CardHeader>
 
           <CardContent className="pt-6">
-            <div className="mb-4 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5 text-xs text-slate-300 space-y-1">
-              <div className="font-bold text-emerald-400">
-                {CATEGORY_LABELS_FA[activeCategory].titleFa} • {CATEGORY_LABELS_FA[activeCategory].titleEn}
+            {/* Category Description Banner with Category-Level Bulk Actions */}
+            <div className="mb-4 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5 text-xs text-slate-300 space-y-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/60 pb-2.5">
+                <div>
+                  <div className="font-bold text-emerald-400 flex items-center gap-2">
+                    <span>
+                      {CATEGORY_LABELS_FA[activeCategory].titleFa} • {CATEGORY_LABELS_FA[activeCategory].titleEn}
+                    </span>
+                    <Badge variant="secondary" className="text-[10px] font-mono">
+                      {
+                        currentCategoryMetrics.filter(
+                          (m) => watchedEnabledMetrics?.[m.key] !== false
+                        ).length
+                      }{" "}
+                      از {currentCategoryMetrics.length} فاکتور فعال
+                    </Badge>
+                  </div>
+                  <div className="text-slate-300 mt-1">
+                    {CATEGORY_LABELS_FA[activeCategory].descFa}
+                  </div>
+                  <div className="text-[11px] text-slate-500 font-sans mt-0.5">
+                    {CATEGORY_LABELS_FA[activeCategory].descEn}
+                  </div>
+                </div>
+
+                {/* Bulk Enable / Disable Buttons for Current Category */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setCategoryMetricsEnabled(activeCategory, true)}
+                    className="cursor-pointer rounded-lg border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 text-[11px] font-medium text-emerald-300 transition-all hover:bg-emerald-900/50 active:scale-95 flex items-center gap-1"
+                    title="اعمال تمام فاکتورهای این دسته"
+                  >
+                    <Check className="h-3 w-3" />
+                    <span>اعمال همه فاکتورهای این دسته</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCategoryMetricsEnabled(activeCategory, false)}
+                    className="cursor-pointer rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-all hover:bg-slate-700 active:scale-95 flex items-center gap-1"
+                    title="عدم اعمال و خروج تمام فاکتورهای این دسته از سنجش"
+                  >
+                    <X className="h-3 w-3 text-rose-400" />
+                    <span>عدم اعمال همه</span>
+                  </button>
+                </div>
               </div>
-              <div className="text-slate-300">{CATEGORY_LABELS_FA[activeCategory].descFa}</div>
-              <div className="text-[11px] text-slate-500 font-sans">{CATEGORY_LABELS_FA[activeCategory].descEn}</div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
+                <span className="flex items-center gap-1">
+                  <SlidersHorizontal className="h-3.5 w-3.5 text-cyan-400" />
+                  برای هر فاکتور می‌توانید با دکمه اختصاصی، وضعیت اندازه‌گیری را تعیین کنید (اعمال شده / عدم اعمال):
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setAllMetricsEnabled(true)}
+                  className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 cursor-pointer font-medium"
+                >
+                  اعمال تمام ۲۵ فاکتور
+                </button>
+              </div>
             </div>
 
-            {/* Dynamically mapped inputs */}
+            {/* Dynamically mapped inputs with Apply / Do Not Apply Toggles */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {currentCategoryMetrics.map((metric) => (
-                <div
-                  key={metric.key}
-                  className="rounded-xl border border-slate-800/80 bg-slate-900/50 p-3.5 hover:border-slate-700 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <Label htmlFor={metric.key} className="mb-0 text-slate-200">
-                      <span>{metric.labelFa}</span>
-                      <span className="text-[10px] text-slate-400 font-mono block">
-                        {metric.nameEn}
-                      </span>
-                    </Label>
-                    {metric.unit && (
-                      <span className="text-[11px] font-mono text-emerald-400/90">
-                        {metric.unit}
-                      </span>
+              {currentCategoryMetrics.map((metric) => {
+                const isEnabled = watchedEnabledMetrics?.[metric.key] !== false;
+                const metricError = errors.metrics?.[metric.key]?.message;
+
+                return (
+                  <div
+                    key={metric.key}
+                    className={`rounded-xl border p-3.5 transition-all ${
+                      isEnabled
+                        ? "border-slate-800/80 bg-slate-900/50 hover:border-slate-700 shadow-sm"
+                        : "border-dashed border-slate-800/60 bg-slate-950/40 opacity-70"
+                    }`}
+                  >
+                    {/* Header: Factor Title + Interactive Apply / Do Not Apply Button */}
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="min-w-0 flex-1">
+                        <Label
+                          htmlFor={metric.key}
+                          className={`mb-0 transition-colors ${
+                            isEnabled ? "text-slate-200" : "text-slate-400"
+                          }`}
+                        >
+                          <span className="font-semibold">{metric.labelFa}</span>
+                          <span className="text-[10px] text-slate-400 font-mono block truncate">
+                            {metric.nameEn}
+                          </span>
+                        </Label>
+                      </div>
+
+                      {/* Apply / Do Not Apply Toggle Button */}
+                      <button
+                        type="button"
+                        onClick={() => toggleMetric(metric.key)}
+                        className={`shrink-0 cursor-pointer rounded-lg px-2.5 py-1 text-xs font-medium transition-all flex items-center gap-1.5 active:scale-95 ${
+                          isEnabled
+                            ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/25"
+                            : "bg-slate-800/80 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-slate-200"
+                        }`}
+                        title={
+                          isEnabled
+                            ? "کلیک برای عدم اعمال / حذف این فاکتور از ارزیابی"
+                            : "کلیک برای اعمال و ثبت این فاکتور"
+                        }
+                      >
+                        {isEnabled ? (
+                          <>
+                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                            <span>اعمال شده</span>
+                          </>
+                        ) : (
+                          <>
+                            <X className="h-3.5 w-3.5 text-rose-400" />
+                            <span className="text-slate-300">عدم اعمال</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Input Element or Unmeasured Box */}
+                    {isEnabled ? (
+                      <div>
+                        {metric.isText ? (
+                          <Select
+                            id={metric.key}
+                            {...register(`metrics.${metric.key}` as "metrics.weight")}
+                            className="bg-slate-950/80"
+                          >
+                            <option value="">انتخاب تیپ بدنی / Select Type</option>
+                            {metric.textOptions?.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.labelFa}
+                              </option>
+                            ))}
+                          </Select>
+                        ) : (
+                          <div>
+                            <div className="relative">
+                              <Input
+                                id={metric.key}
+                                type="number"
+                                step={metric.step}
+                                min={metric.min}
+                                max={metric.max}
+                                {...register(
+                                  `metrics.${metric.key}` as "metrics.weight",
+                                  { valueAsNumber: true }
+                                )}
+                                className="font-mono bg-slate-950/80"
+                              />
+                              {metric.unit && (
+                                <span className="pointer-events-none absolute left-3 top-2.5 text-xs font-mono text-emerald-400/90">
+                                  {metric.unit}
+                                </span>
+                              )}
+                            </div>
+                            {metric.standardRange && (
+                              <div className="mt-1 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                                <span>دامنه مطلوب / Optimal:</span>
+                                <span>
+                                  {metric.standardRange.min} - {metric.standardRange.max}{" "}
+                                  {metric.unit}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {metricError && (
+                          <p className="mt-1 text-xs text-rose-400">{metricError}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/70 p-3 text-center my-0.5">
+                        <div className="text-xs font-medium text-slate-400 flex items-center justify-center gap-1.5">
+                          <X className="h-3.5 w-3.5 text-slate-500" />
+                          <span>فاکتور اندازه‌گیری نشده (فاقد داده)</span>
+                        </div>
+                        <span className="block text-[10px] text-slate-500 font-mono mt-0.5">
+                          Not Measured • Excluded from Assessment & PDF
+                        </span>
+                      </div>
+                    )}
+
+                    {metric.karateContext && isEnabled && (
+                      <p className="mt-2 text-[11px] text-slate-400 leading-snug line-clamp-2">
+                        {metric.karateContext}
+                      </p>
                     )}
                   </div>
-
-                  {metric.isText ? (
-                    <Select
-                      id={metric.key}
-                      {...register(`metrics.${metric.key}` as "metrics.weight")}
-                      className="bg-slate-950/80"
-                    >
-                      <option value="">انتخاب تیپ بدنی / Select Type</option>
-                      {metric.textOptions?.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.labelFa}
-                        </option>
-                      ))}
-                    </Select>
-                  ) : (
-                    <div>
-                      <Input
-                        id={metric.key}
-                        type="number"
-                        step={metric.step}
-                        min={metric.min}
-                        max={metric.max}
-                        {...register(
-                          `metrics.${metric.key}` as "metrics.weight",
-                          { valueAsNumber: true }
-                        )}
-                        className="font-mono bg-slate-950/80"
-                      />
-                      {metric.standardRange && (
-                        <div className="mt-1 flex items-center justify-between text-[10px] text-slate-500 font-mono">
-                          <span>دامنه مطلوب / Optimal:</span>
-                          <span>
-                            {metric.standardRange.min} - {metric.standardRange.max}{" "}
-                            {metric.unit}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {metric.karateContext && (
-                    <p className="mt-1.5 text-[11px] text-slate-400 leading-snug line-clamp-2">
-                      {metric.karateContext}
-                    </p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Quick Category Navigation Buttons */}

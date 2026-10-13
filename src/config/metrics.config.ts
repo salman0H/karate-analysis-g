@@ -561,6 +561,14 @@ export function getDefaultMetricsValues(): Record<string, number | string> {
   return result;
 }
 
+export function getDefaultEnabledMetrics(): Record<string, boolean> {
+  const result: Record<string, boolean> = {};
+  for (const m of METRICS_CONFIG) {
+    result[m.key] = true;
+  }
+  return result;
+}
+
 export const SAMPLE_ATHLETE_EXPORT = {
   fullName: "سجاد کریمی (Sajad Karimi)",
   gender: "MALE" as const,

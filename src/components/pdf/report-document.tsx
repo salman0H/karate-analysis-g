@@ -521,8 +521,14 @@ function renderMetricValue(
   def: MetricDefinition,
   val: number | string | undefined
 ) {
-  if (val === undefined || val === null || val === "") {
-    return <Text style={styles.metricValText}>-</Text>;
+  if (val === undefined || val === null || val === "" || val === "-") {
+    return (
+      <View style={styles.metricValRow}>
+        <Text style={[styles.metricValText, { color: "#94a3b8", fontSize: 6 }]}>
+          اندازه‌گیری نشده
+        </Text>
+      </View>
+    );
   }
 
   if (def.isText) {
@@ -567,14 +573,14 @@ export function ReportDocument({
 }: ReportDocumentProps) {
   const { nameFa, nameEn } = parseAthleteName(fullName);
 
-  // Extract primary Hero KPIs
-  const weight = metrics["weight"] ?? 68.5;
-  const bmi = metrics["bmi"] ?? 22.4;
-  const bodyFat = metrics["bodyFatPercentage"] ?? 13.0;
-  const musclePercent = metrics["musclePercentage"] ?? 82.3;
-  const heartRate = metrics["heartRate"] ?? 64;
-  const bodyAge = metrics["bodyAge"] ?? 20;
-  const bodyScore = metrics["bodyScore"] ?? 88;
+  // Extract primary Hero KPIs (safely check if provided/measured)
+  const weight = metrics["weight"] !== undefined && metrics["weight"] !== null && metrics["weight"] !== "" ? metrics["weight"] : null;
+  const bmi = metrics["bmi"] !== undefined && metrics["bmi"] !== null && metrics["bmi"] !== "" ? metrics["bmi"] : null;
+  const bodyFat = metrics["bodyFatPercentage"] !== undefined && metrics["bodyFatPercentage"] !== null && metrics["bodyFatPercentage"] !== "" ? metrics["bodyFatPercentage"] : null;
+  const musclePercent = metrics["musclePercentage"] !== undefined && metrics["musclePercentage"] !== null && metrics["musclePercentage"] !== "" ? metrics["musclePercentage"] : null;
+  const heartRate = metrics["heartRate"] !== undefined && metrics["heartRate"] !== null && metrics["heartRate"] !== "" ? metrics["heartRate"] : null;
+  const bodyAge = metrics["bodyAge"] !== undefined && metrics["bodyAge"] !== null && metrics["bodyAge"] !== "" ? metrics["bodyAge"] : null;
+  const bodyScore = metrics["bodyScore"] !== undefined && metrics["bodyScore"] !== null && metrics["bodyScore"] !== "" ? metrics["bodyScore"] : null;
 
   // Filter 4 balanced categories
   // 1. Tissue & Muscle Masses (7 metrics)
@@ -699,7 +705,9 @@ export function ReportDocument({
           <View style={styles.dossierCol}>
             <Text style={styles.dossierLabelFa}>امتیاز سلامت کل</Text>
             <Text style={styles.dossierLabelEn}>Body Score</Text>
-            <Text style={styles.dossierValue}>{toPersianDigits(bodyScore)} از ۱۰۰</Text>
+            <Text style={styles.dossierValue}>
+              {bodyScore !== null ? `${toPersianDigits(bodyScore)} از ۱۰۰` : "ثبت نشده"}
+            </Text>
           </View>
         </View>
 
@@ -713,14 +721,24 @@ export function ReportDocument({
 
         <View style={styles.heroGrid}>
           {/* 1. Weight */}
-          <View style={[styles.heroCard, styles.heroCardEmerald]}>
+          <View style={[styles.heroCard, weight !== null ? styles.heroCardEmerald : undefined]}>
             <Text style={styles.heroLabelFa}>وزن فعلی</Text>
             <Text style={styles.heroLabelEn}>Body Weight</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(weight)}</Text>
-              <Text style={styles.heroValueUnit}>کیلوگرم</Text>
+              {weight !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(weight)}</Text>
+                  <Text style={styles.heroValueUnit}>کیلوگرم</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>وزن مسابقه WKF</Text>
+            <Text style={[styles.heroBadgeText, weight === null ? { color: "#94a3b8" } : undefined]}>
+              {weight !== null ? "وزن مسابقه WKF" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
 
           {/* 2. BMI */}
@@ -728,32 +746,62 @@ export function ReportDocument({
             <Text style={styles.heroLabelFa}>شاخص BMI</Text>
             <Text style={styles.heroLabelEn}>Body Mass Index</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(bmi)}</Text>
-              <Text style={styles.heroValueUnit}>kg/m²</Text>
+              {bmi !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(bmi)}</Text>
+                  <Text style={styles.heroValueUnit}>kg/m²</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>محدوده بهینه</Text>
+            <Text style={[styles.heroBadgeText, bmi === null ? { color: "#94a3b8" } : undefined]}>
+              {bmi !== null ? "محدوده بهینه" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
 
           {/* 3. Body Fat % */}
-          <View style={[styles.heroCard, styles.heroCardEmerald]}>
+          <View style={[styles.heroCard, bodyFat !== null ? styles.heroCardEmerald : undefined]}>
             <Text style={styles.heroLabelFa}>درصد چربی</Text>
             <Text style={styles.heroLabelEn}>Body Fat Ratio</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(bodyFat)}</Text>
-              <Text style={styles.heroValueUnit}>٪</Text>
+              {bodyFat !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(bodyFat)}</Text>
+                  <Text style={styles.heroValueUnit}>٪</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>رده قهرمانی</Text>
+            <Text style={[styles.heroBadgeText, bodyFat === null ? { color: "#94a3b8" } : undefined]}>
+              {bodyFat !== null ? "رده قهرمانی" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
 
           {/* 4. Muscle % */}
-          <View style={[styles.heroCard, styles.heroCardEmerald]}>
+          <View style={[styles.heroCard, musclePercent !== null ? styles.heroCardEmerald : undefined]}>
             <Text style={styles.heroLabelFa}>درصد عضله</Text>
             <Text style={styles.heroLabelEn}>Muscle Ratio</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(musclePercent)}</Text>
-              <Text style={styles.heroValueUnit}>٪</Text>
+              {musclePercent !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(musclePercent)}</Text>
+                  <Text style={styles.heroValueUnit}>٪</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>توان انفجاری</Text>
+            <Text style={[styles.heroBadgeText, musclePercent === null ? { color: "#94a3b8" } : undefined]}>
+              {musclePercent !== null ? "توان انفجاری" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
 
           {/* 5. Heart Rate */}
@@ -761,10 +809,20 @@ export function ReportDocument({
             <Text style={styles.heroLabelFa}>ضربان استراحت</Text>
             <Text style={styles.heroLabelEn}>Resting HR</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(heartRate)}</Text>
-              <Text style={styles.heroValueUnit}>bpm</Text>
+              {heartRate !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(heartRate)}</Text>
+                  <Text style={styles.heroValueUnit}>bpm</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>ریکاوری هوازی</Text>
+            <Text style={[styles.heroBadgeText, heartRate === null ? { color: "#94a3b8" } : undefined]}>
+              {heartRate !== null ? "ریکاوری هوازی" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
 
           {/* 6. Body Age */}
@@ -772,10 +830,20 @@ export function ReportDocument({
             <Text style={styles.heroLabelFa}>سن بیولوژیک</Text>
             <Text style={styles.heroLabelEn}>Biological Age</Text>
             <View style={styles.heroValueContainer}>
-              <Text style={styles.heroValueNum}>{String(bodyAge)}</Text>
-              <Text style={styles.heroValueUnit}>سال</Text>
+              {bodyAge !== null ? (
+                <>
+                  <Text style={styles.heroValueNum}>{String(bodyAge)}</Text>
+                  <Text style={styles.heroValueUnit}>سال</Text>
+                </>
+              ) : (
+                <Text style={[styles.heroValueNum, { fontSize: 7, color: "#94a3b8" }]}>
+                  عدم اعمال
+                </Text>
+              )}
             </View>
-            <Text style={styles.heroBadgeText}>سرزندگی سلولی</Text>
+            <Text style={[styles.heroBadgeText, bodyAge === null ? { color: "#94a3b8" } : undefined]}>
+              {bodyAge !== null ? "سرزندگی سلولی" : "اندازه‌گیری نشده"}
+            </Text>
           </View>
         </View>
 
