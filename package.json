@@ -10,7 +10,10 @@
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "import:data": "tsx scripts/import-data.ts",
-    "generate:pdfs": "tsx scripts/generate-athlete-pdfs.mts"
+    "generate:pdfs": "tsx scripts/generate-athlete-pdfs.mts",
+    "generate:charts": "python3 scripts/generate_charts.py",
+    "generate:markdown": "tsx scripts/generate_markdown_reports.ts",
+    "process:all": "tsx scripts/generate-all-reports.ts && python3 scripts/generate_charts.py && tsx scripts/generate_markdown_reports.ts"
   },
   "dependencies": {
     "@next/env": "16.4.0",

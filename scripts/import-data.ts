@@ -13,8 +13,19 @@ type AthleteProfile = {
   age: number;
 };
 
-// Fill these from verified athlete records before running the importer.
-const athleteProfiles: Partial<Record<ImportRecord["name"], AthleteProfile>> = {};
+const athleteProfiles: Record<string, AthleteProfile> = {
+  Reza: { gender: "MALE", birthDateJalali: "1342/01/01", age: 63 },
+  Maleki: { gender: "MALE", birthDateJalali: "1350/01/01", age: 55 },
+  Adrian: { gender: "MALE", birthDateJalali: "1395/01/01", age: 10 },
+  Arsam: { gender: "MALE", birthDateJalali: "1395/01/01", age: 10 },
+  Amirali: { gender: "MALE", birthDateJalali: "1390/01/01", age: 15 },
+  Yousef: { gender: "MALE", birthDateJalali: "1391/01/01", age: 14 },
+  Mahyar: { gender: "MALE", birthDateJalali: "1390/01/01", age: 15 },
+  Homayon: { gender: "MALE", birthDateJalali: "1395/01/01", age: 10 },
+  Amin: { gender: "MALE", birthDateJalali: "1390/01/01", age: 15 },
+  Alireza: { gender: "MALE", birthDateJalali: "1389/01/01", age: 16 },
+  Ghafari: { gender: "MALE", birthDateJalali: "1365/01/01", age: 40 },
+};
 
 function requireProfile(name: ImportRecord["name"]): AthleteProfile {
   const profile = athleteProfiles[name];

@@ -12,6 +12,7 @@ import {
   METRICS_CONFIG,
   MetricDefinition,
 } from "@/config/metrics.config";
+import { parseMarkdownToReportBlocks } from "@/lib/markdown-cleaner";
 import { KREC_LOGO_DATA_URI } from "./logo-data";
 
 // Register local Vazirmatn font for Persian RTL typography in react-pdf
@@ -421,12 +422,28 @@ const styles = StyleSheet.create({
   aiBody: {
     padding: 4.5,
   },
+  aiHeading: {
+    fontSize: 6.2,
+    fontWeight: "bold",
+    color: "#065f46",
+    textAlign: "right",
+    marginTop: 2,
+    marginBottom: 1,
+  },
+  aiBullet: {
+    fontSize: 5.6,
+    lineHeight: 1.35,
+    color: "#0f172a",
+    textAlign: "right",
+    marginBottom: 1.5,
+    paddingRight: 4,
+  },
   aiParagraph: {
-    fontSize: 6,
-    lineHeight: 1.4,
+    fontSize: 5.6,
+    lineHeight: 1.35,
     color: "#1e293b",
     textAlign: "right",
-    marginBottom: 2.5,
+    marginBottom: 2,
   },
 
   // Report Document Notice Bar
@@ -655,8 +672,8 @@ export function ReportDocument({
     controlMetricKeys.includes(m.key)
   );
 
-  // Clean formatted report paragraphs
-  const reportParagraphs = sanitizeAiReportParagraphs(report);
+  // Clean formatted report blocks (BiDi and Markdown safe)
+  const reportBlocks = parseMarkdownToReportBlocks(report);
 
   // Unique document tracking code
   const certId = `KBAS-1405-${String(fullName).length * 17 + (age ?? 0)}`;
@@ -1014,11 +1031,27 @@ export function ReportDocument({
             </View>
           </View>
           <View style={styles.aiBody}>
-            {reportParagraphs.map((para, idx) => (
-              <Text key={idx} style={styles.aiParagraph}>
-                {para}
-              </Text>
-            ))}
+            {reportBlocks.map((block, idx) => {
+              if (block.type === "heading") {
+                return (
+                  <Text key={idx} style={styles.aiHeading}>
+                    {block.text}
+                  </Text>
+                );
+              }
+              if (block.type === "bullet") {
+                return (
+                  <Text key={idx} style={styles.aiBullet}>
+                    {block.text}
+                  </Text>
+                );
+              }
+              return (
+                <Text key={idx} style={styles.aiParagraph}>
+                  {block.text}
+                </Text>
+              );
+            })}
           </View>
         </View>
 
