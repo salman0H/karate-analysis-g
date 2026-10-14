@@ -68,7 +68,7 @@ const ATHLETE_PROFILES: Record<string, Profile> = {
     gender: "MALE",
     age: 55,
     birthDateJalali: "1350/01/01",
-    discipline: "fitness",
+    discipline: "karate",
   },
   Adrian: {
     nameFa: "آدریان",
@@ -95,7 +95,7 @@ const ATHLETE_PROFILES: Record<string, Profile> = {
     gender: "MALE",
     age: 15,
     birthDateJalali: "1390/01/01",
-    discipline: "football",
+    discipline: "karate",
   },
   Yousef: {
     nameFa: "یوسف",
@@ -113,7 +113,7 @@ const ATHLETE_PROFILES: Record<string, Profile> = {
     gender: "MALE",
     age: 15,
     birthDateJalali: "1390/01/01",
-    discipline: "combat",
+    discipline: "karate",
   },
   Homayon: {
     nameFa: "همایون",
@@ -131,7 +131,7 @@ const ATHLETE_PROFILES: Record<string, Profile> = {
     gender: "MALE",
     age: 15,
     birthDateJalali: "1390/01/01",
-    discipline: "bodybuilding",
+    discipline: "karate",
   },
   Alireza: {
     nameFa: "علیرضا",
