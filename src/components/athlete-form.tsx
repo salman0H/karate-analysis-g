@@ -15,6 +15,8 @@ import {
 import {
   athleteFormSchema,
   AthleteFormValues,
+  SPORT_DISCIPLINES,
+  SportDiscipline,
 } from "@/types/athlete";
 import { calculateAgeFromJalali } from "@/lib/jalali";
 import { SelfieCapture } from "@/components/selfie-capture";
@@ -85,6 +87,7 @@ export function AthleteForm() {
       fullName: "سجاد کریمی",
       gender: "MALE",
       birthDateJalali: "1381/04/10",
+      discipline: "karate",
       selfieDataUrl: null,
       metrics: getDefaultMetricsValues(),
       enabledMetrics: getDefaultEnabledMetrics(),
@@ -93,6 +96,7 @@ export function AthleteForm() {
   });
 
   const birthDateJalali = watch("birthDateJalali");
+  const watchedDiscipline = watch("discipline");
   const watchedMetrics = watch("metrics");
   const watchedEnabledMetrics = watch("enabledMetrics");
   const watchedFullName = watch("fullName");
@@ -185,6 +189,7 @@ export function AthleteForm() {
       fullName: preset.fullName,
       gender: preset.gender,
       birthDateJalali: preset.birthDateJalali,
+      discipline: watchedDiscipline || "karate",
       selfieDataUrl: watchedSelfie,
       metrics: {
         ...getDefaultMetricsValues(),
@@ -236,6 +241,7 @@ export function AthleteForm() {
           gender: data.gender,
           age,
           birthDateJalali: data.birthDateJalali,
+          discipline: data.discipline,
           metrics: appliedMetrics,
           clubName: "باشگاه کاراته شرکت برق منطقه ای خراسان",
         }),
@@ -297,6 +303,7 @@ export function AthleteForm() {
           gender: watchedGender,
           age: calculatedAge,
           birthDateJalali,
+          discipline: watchedDiscipline,
           metrics: appliedMetrics,
           selfieDataUrl: watchedSelfie,
           report,
@@ -629,6 +636,22 @@ export function AthleteForm() {
                 {errors.fullName && (
                   <p className="mt-1 text-xs text-rose-400">
                     {errors.fullName.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="discipline">رشته ورزشی و دامنه گزارش تحلیلی / Sport Discipline & Analysis Domain</Label>
+                <Select id="discipline" {...register("discipline")}>
+                  {SPORT_DISCIPLINES.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.labelFa} ({item.labelEn}) — {item.coachTitleFa}
+                    </option>
+                  ))}
+                </Select>
+                {errors.discipline && (
+                  <p className="mt-1 text-xs text-rose-400">
+                    {errors.discipline.message}
                   </p>
                 )}
               </div>

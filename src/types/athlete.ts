@@ -1,6 +1,75 @@
 import { z } from "zod";
 import { METRICS_CONFIG } from "@/config/metrics.config";
 
+export type SportDiscipline =
+  | "karate"
+  | "fitness"
+  | "bodybuilding"
+  | "football"
+  | "combat"
+  | "swimming"
+  | "running";
+
+export interface SportDisciplineOption {
+  value: SportDiscipline;
+  labelFa: string;
+  labelEn: string;
+  coachTitleFa: string;
+  badgeFa: string;
+}
+
+export const SPORT_DISCIPLINES: SportDisciplineOption[] = [
+  {
+    value: "karate",
+    labelFa: "کاراته قهرمانی (WKF)",
+    labelEn: "Karate (WKF)",
+    coachTitleFa: "مربی ارشد آماده‌سازی جسمانی کاراته",
+    badgeFa: "تأییدیه هوشمند کومیته",
+  },
+  {
+    value: "fitness",
+    labelFa: "آمادگی جسمانی عمومی و فیتنس",
+    labelEn: "Physical Fitness & Conditioning",
+    coachTitleFa: "متخصص فیزیولوژی ورزشی و آمادگی جسمانی",
+    badgeFa: "تأییدیه آمادگی جسمانی",
+  },
+  {
+    value: "bodybuilding",
+    labelFa: "بدنسازی و هایپرتروفی",
+    labelEn: "Bodybuilding & Hypertrophy",
+    coachTitleFa: "مربی ارشد بدنسازی و پرورش اندام",
+    badgeFa: "تأییدیه هایپرتروفی عضلانی",
+  },
+  {
+    value: "football",
+    labelFa: "فوتبال",
+    labelEn: "Football / Soccer",
+    coachTitleFa: "مربی توان‌بخشی و بدنسازی فوتبال",
+    badgeFa: "تأییدیه عملکرد فوتبال",
+  },
+  {
+    value: "combat",
+    labelFa: "ورزش‌های رزمی ترکیبی (MMA / بوکس)",
+    labelEn: "Combat Sports & Boxing",
+    coachTitleFa: "مربی ارشد آماده‌سازی ورزش‌های رزمی",
+    badgeFa: "تأییدیه توان رزمی",
+  },
+  {
+    value: "swimming",
+    labelFa: "شنا و ورزش‌های آبی",
+    labelEn: "Swimming & Aquatic Sports",
+    coachTitleFa: "کارشناس فیزیولوژی و عملکرد شنا",
+    badgeFa: "تأییدیه شناوری و استقامت",
+  },
+  {
+    value: "running",
+    labelFa: "دوومیدانی و استقامت",
+    labelEn: "Athletics & Endurance Running",
+    coachTitleFa: "مربی ارشد دوومیدانی و تمرینات استقامتی",
+    badgeFa: "تأییدیه استقامت هوازی",
+  },
+];
+
 // Dynamic metrics schema validated against METRICS_CONFIG and enabled toggles
 export const athleteFormSchema = z
   .object({
@@ -14,6 +83,15 @@ export const athleteFormSchema = z
     birthDateJalali: z
       .string()
       .regex(/^\d{4}\/\d{1,2}\/\d{1,2}$/, "فرمت معتبر تاریخ شمسی: مثلاً ۱۳۸۲/۰۵/۱۴"),
+    discipline: z.enum([
+      "karate",
+      "fitness",
+      "bodybuilding",
+      "football",
+      "combat",
+      "swimming",
+      "running",
+    ]),
     selfieDataUrl: z.string().nullable().optional(),
     metrics: z.record(
       z.string(),
@@ -92,6 +170,7 @@ export interface AnalyzeRequestPayload {
   gender: "MALE" | "FEMALE";
   age: number;
   birthDateJalali: string;
+  discipline?: SportDiscipline;
   metrics: Record<string, number | string>;
   clubName?: string;
 }

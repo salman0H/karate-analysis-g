@@ -13,6 +13,7 @@ import {
   MetricDefinition,
 } from "@/config/metrics.config";
 import { parseMarkdownToReportBlocks } from "@/lib/markdown-cleaner";
+import { SPORT_DISCIPLINES, SportDiscipline } from "@/types/athlete";
 import { KREC_LOGO_DATA_URI } from "./logo-data";
 
 // Register local Vazirmatn font for Persian RTL typography in react-pdf
@@ -32,8 +33,8 @@ const styles = StyleSheet.create({
     fontFamily: "Vazirmatn",
     backgroundColor: "#ffffff",
     color: "#0f172a",
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingTop: 14,
+    paddingBottom: 14,
     paddingHorizontal: 20,
     fontSize: 8,
     direction: "rtl",
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d97706",
   },
 
-  // Main Official Header
+  // Main Official Header (Page 1)
   headerWrapper: {
     flexDirection: "row-reverse",
     justifyContent: "space-between",
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderBottomColor: "#059669",
     paddingBottom: 5,
-    marginBottom: 4.5,
+    marginBottom: 5,
   },
   headerRightGroup: {
     flexDirection: "row-reverse",
@@ -71,15 +72,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerLogoBox: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     marginLeft: 8,
     alignItems: "center",
     justifyContent: "center",
   },
   headerLogoImage: {
-    width: 50,
-    height: 50,
+    width: 46,
+    height: 46,
     objectFit: "contain",
   },
   headerTextGroup: {
@@ -125,6 +126,45 @@ const styles = StyleSheet.create({
     gap: 6,
   },
 
+  // Compact Header (Page 2)
+  page2HeaderWrapper: {
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#cbd5e1",
+    paddingBottom: 4,
+    marginBottom: 5,
+  },
+  page2HeaderRight: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+  },
+  page2LogoBox: {
+    width: 28,
+    height: 28,
+    marginLeft: 6,
+  },
+  page2LogoImage: {
+    width: 26,
+    height: 26,
+    objectFit: "contain",
+  },
+  page2TitleFa: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#064e3b",
+  },
+  page2SubtitleFa: {
+    fontSize: 6,
+    color: "#475569",
+  },
+  page2HeaderLeft: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    gap: 5,
+  },
+
   // Technical Masters & Leadership Banner
   mastersBanner: {
     flexDirection: "row-reverse",
@@ -137,7 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: 3.5,
     paddingVertical: 3,
     paddingHorizontal: 6,
-    marginBottom: 4.5,
+    marginBottom: 5,
   },
   mastersBadge: {
     backgroundColor: "#059669",
@@ -180,8 +220,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   selfieBox: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     borderRadius: 5,
     borderWidth: 1.25,
     borderColor: "#059669",
@@ -223,15 +263,28 @@ const styles = StyleSheet.create({
     marginTop: 0.5,
   },
   dossierValue: {
-    fontSize: 8,
+    fontSize: 7.8,
     fontWeight: "bold",
     color: "#0f172a",
     marginTop: 1,
   },
   dossierSubNameEn: {
-    fontSize: 5.5,
+    fontSize: 5.2,
     color: "#475569",
     marginTop: 0.5,
+  },
+  disciplineBadge: {
+    alignSelf: "flex-end",
+    backgroundColor: "#059669",
+    borderRadius: 3,
+    paddingHorizontal: 5,
+    paddingVertical: 1.5,
+    marginTop: 2,
+  },
+  disciplineBadgeText: {
+    fontSize: 5.5,
+    fontWeight: "bold",
+    color: "#ffffff",
   },
 
   // Section Heading Bar
@@ -243,13 +296,13 @@ const styles = StyleSheet.create({
     borderRightWidth: 2.5,
     borderRightColor: "#059669",
     borderRadius: 2.5,
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    marginBottom: 3.5,
-    marginTop: 3.5,
+    paddingVertical: 2.5,
+    paddingHorizontal: 6,
+    marginBottom: 4,
+    marginTop: 4,
   },
   sectionHeadingFa: {
-    fontSize: 7,
+    fontSize: 7.2,
     fontWeight: "bold",
     color: "#065f46",
     textAlign: "right",
@@ -265,7 +318,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     gap: 3.5,
-    marginBottom: 2,
+    marginBottom: 3,
   },
   heroCard: {
     width: "15.8%",
@@ -273,22 +326,22 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: "#cbd5e1",
     borderRadius: 3.5,
-    padding: 3,
+    padding: 3.5,
     textAlign: "right",
-    minHeight: 44,
+    minHeight: 46,
   },
   heroCardEmerald: {
     borderColor: "#86efac",
     backgroundColor: "#f0fdf4",
   },
   heroLabelFa: {
-    fontSize: 6,
+    fontSize: 6.2,
     fontWeight: "bold",
     color: "#1e293b",
     textAlign: "right",
   },
   heroLabelEn: {
-    fontSize: 4.5,
+    fontSize: 4.6,
     color: "#64748b",
     textAlign: "right",
     marginTop: 0.5,
@@ -297,11 +350,11 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     alignItems: "baseline",
     justifyContent: "flex-start",
-    marginTop: 1.5,
+    marginTop: 2,
     flexWrap: "nowrap",
   },
   heroValueNum: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: "bold",
     color: "#065f46",
   },
@@ -311,20 +364,20 @@ const styles = StyleSheet.create({
     marginRight: 1.5,
   },
   heroBadgeText: {
-    fontSize: 4.5,
+    fontSize: 4.8,
     color: "#059669",
     fontWeight: "bold",
     marginTop: 1,
     textAlign: "right",
   },
 
-  // Metrics Grid Matrix (4 columns, balanced)
+  // Metrics Grid Matrix (4 columns)
   metricsGrid: {
     flexDirection: "row-reverse",
     flexWrap: "wrap",
     justifyContent: "space-between",
     gap: 3.5,
-    marginBottom: 1.5,
+    marginBottom: 2,
   },
   metricCard: {
     width: "23.8%",
@@ -332,22 +385,22 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: "#e2e8f0",
     borderRadius: 3,
-    paddingVertical: 2.5,
-    paddingHorizontal: 4,
-    marginBottom: 1.5,
+    paddingVertical: 3,
+    paddingHorizontal: 4.5,
+    marginBottom: 2,
   },
   metricHeaderGroup: {
     textAlign: "right",
     marginBottom: 0.5,
   },
   metricTitleFa: {
-    fontSize: 6,
+    fontSize: 6.2,
     fontWeight: "bold",
     color: "#334155",
     textAlign: "right",
   },
   metricTitleEn: {
-    fontSize: 4.5,
+    fontSize: 4.6,
     color: "#94a3b8",
     textAlign: "right",
     marginTop: 0.5,
@@ -356,10 +409,10 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     alignItems: "baseline",
     justifyContent: "flex-start",
-    marginTop: 1,
+    marginTop: 1.5,
   },
   metricValNum: {
-    fontSize: 8,
+    fontSize: 8.5,
     fontWeight: "bold",
     color: "#0f172a",
   },
@@ -369,15 +422,57 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   metricValText: {
-    fontSize: 6.5,
+    fontSize: 6.8,
     fontWeight: "bold",
     color: "#065f46",
     textAlign: "right",
   },
 
-  // AI Karate Conditioning Coach Box
+  // Visual Chart Dashboard Box (Page 2)
+  chartContainer: {
+    width: "100%",
+    backgroundColor: "#090d16",
+    borderWidth: 1,
+    borderColor: "#1e293b",
+    borderRadius: 4,
+    padding: 3,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 5,
+    overflow: "hidden",
+  },
+  chartImage: {
+    width: 550,
+    height: 195,
+    objectFit: "contain",
+  },
+  chartFallbackBox: {
+    width: "100%",
+    height: 120,
+    backgroundColor: "#f8fafc",
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    marginBottom: 5,
+  },
+  chartFallbackTitle: {
+    fontSize: 8,
+    fontWeight: "bold",
+    color: "#0f172a",
+    marginBottom: 3,
+  },
+  chartFallbackDesc: {
+    fontSize: 6,
+    color: "#64748b",
+    textAlign: "center",
+  },
+
+  // AI Conditioning & Performance Strategy Box (Page 2)
   aiSection: {
-    marginTop: 3.5,
+    marginTop: 3,
     borderWidth: 0.75,
     borderColor: "#10b981",
     borderRadius: 4,
@@ -391,59 +486,59 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecfdf5",
     borderBottomWidth: 0.75,
     borderBottomColor: "#a7f3d0",
-    paddingVertical: 2.5,
-    paddingHorizontal: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
   },
   aiHeaderRight: {
     textAlign: "right",
   },
   aiTitleFa: {
-    fontSize: 7,
+    fontSize: 7.2,
     fontWeight: "bold",
     color: "#065f46",
     textAlign: "right",
   },
   aiTitleEn: {
-    fontSize: 5,
+    fontSize: 5.2,
     color: "#059669",
     textAlign: "right",
   },
   aiBadge: {
     backgroundColor: "#059669",
     borderRadius: 2.5,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
+    paddingHorizontal: 5,
+    paddingVertical: 1.5,
   },
   aiBadgeText: {
-    fontSize: 5,
+    fontSize: 5.2,
     color: "#ffffff",
     fontWeight: "bold",
   },
   aiBody: {
-    padding: 4.5,
+    padding: 6,
   },
   aiHeading: {
-    fontSize: 6.2,
+    fontSize: 6.8,
     fontWeight: "bold",
     color: "#065f46",
     textAlign: "right",
-    marginTop: 2,
-    marginBottom: 1,
+    marginTop: 3,
+    marginBottom: 1.5,
   },
   aiBullet: {
-    fontSize: 5.6,
+    fontSize: 6,
     lineHeight: 1.35,
     color: "#0f172a",
     textAlign: "right",
-    marginBottom: 1.5,
+    marginBottom: 1.8,
     paddingRight: 4,
   },
   aiParagraph: {
-    fontSize: 5.6,
+    fontSize: 6,
     lineHeight: 1.35,
     color: "#1e293b",
     textAlign: "right",
-    marginBottom: 2,
+    marginBottom: 2.5,
   },
 
   // Report Document Notice Bar
@@ -455,7 +550,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.75,
     borderColor: "#bbf7d0",
     borderRadius: 3,
-    paddingVertical: 3,
+    paddingVertical: 2.5,
     paddingHorizontal: 6,
     marginTop: 4,
     marginBottom: 3,
@@ -470,6 +565,46 @@ const styles = StyleSheet.create({
     color: "#15803d",
   },
 
+  // Sign-off / Verification Box (Page 2)
+  verificationBox: {
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    borderWidth: 0.75,
+    borderColor: "#cbd5e1",
+    borderRadius: 3.5,
+    backgroundColor: "#f8fafc",
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    marginTop: 4,
+    marginBottom: 3,
+  },
+  verificationCol: {
+    alignItems: "center",
+    flex: 1,
+  },
+  verificationTitleFa: {
+    fontSize: 5.8,
+    fontWeight: "bold",
+    color: "#0f172a",
+  },
+  verificationTitleEn: {
+    fontSize: 4.5,
+    color: "#64748b",
+    marginTop: 0.5,
+  },
+  verificationSignLine: {
+    width: "70%",
+    borderBottomWidth: 0.75,
+    borderBottomColor: "#94a3b8",
+    marginTop: 14,
+    marginBottom: 2,
+  },
+  verificationStatus: {
+    fontSize: 4.8,
+    color: "#059669",
+    fontWeight: "bold",
+  },
+
   // Footer Bar
   footer: {
     flexDirection: "row-reverse",
@@ -477,7 +612,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopWidth: 0.75,
     borderTopColor: "#e2e8f0",
-    marginTop: 4,
+    marginTop: 3,
     paddingTop: 2.5,
   },
   footerTextRight: {
@@ -496,13 +631,16 @@ const styles = StyleSheet.create({
   },
 });
 
-interface ReportDocumentProps {
+export interface ReportDocumentProps {
   fullName: string;
   gender: "MALE" | "FEMALE" | null;
   age: number | null;
   birthDateJalali: string | null;
+  discipline?: SportDiscipline | string | null;
   metrics: Record<string, number | string | null>;
   selfieDataUrl?: string | null;
+  chartImagePath?: string | null;
+  chartDataUrl?: string | null;
   report: string;
   generatedAt: string;
   dataOnly?: boolean;
@@ -518,9 +656,9 @@ function toPersianDigits(n: number | string): string {
 const BODY_TYPE_LABELS: Record<string, string> = {
   underweight: "لاغر و کمبود وزن",
   balanced: "متوازن استاندارد",
-  balancedMuscular: "متوازن عضلانی • ایده‌آل کومیته",
+  balancedMuscular: "متوازن عضلانی • ایده‌آل ورزشی",
   skinnyFat: "لاغر با درصد چربی بالا",
-  muscular: "عضلانی قدرتی • ایده‌آل کاتا",
+  muscular: "عضلانی قدرتی",
   thickSet: "تنومند سنگین‌وزن",
   overweight: "اضافه وزن",
   obese: "چاقی بیش از حد",
@@ -543,23 +681,6 @@ function parseAthleteName(name: string): { nameFa: string; nameEn: string } {
     return { nameFa: match[1].trim(), nameEn: match[2].trim() };
   }
   return { nameFa: name.trim(), nameEn: "" };
-}
-
-// Sanitizes AI coach report text to avoid react-pdf line-scrambling on mixed BiDi
-function sanitizeAiReportParagraphs(raw: string): string[] {
-  if (!raw) return [];
-  return raw
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .map((line) => {
-      // Remove trailing colons
-      let cleaned = line.replace(/[:：]$/, "");
-      // Remove parenthetical English Latin terms embedded in Persian text
-      cleaned = cleaned.replace(/\([A-Za-z0-9\s\-–—/]+\)/g, "").replace(/\s{2,}/g, " ");
-      return cleaned.trim();
-    })
-    .filter((line) => line.length > 0);
 }
 
 // Helper to render metric values safely in RTL
@@ -612,22 +733,61 @@ export function ReportDocument({
   gender,
   age,
   birthDateJalali,
+  discipline = "karate",
   metrics,
   selfieDataUrl,
+  chartImagePath,
+  chartDataUrl,
   report,
   generatedAt,
   dataOnly = false,
 }: ReportDocumentProps) {
   const { nameFa, nameEn } = parseAthleteName(fullName);
 
+  // Match discipline definition
+  const discInfo =
+    SPORT_DISCIPLINES.find((d) => d.value === discipline) ||
+    SPORT_DISCIPLINES[0];
+
   // Extract primary Hero KPIs (safely check if provided/measured)
-  const weight = metrics["weight"] !== undefined && metrics["weight"] !== null && metrics["weight"] !== "" ? metrics["weight"] : null;
-  const bmi = metrics["bmi"] !== undefined && metrics["bmi"] !== null && metrics["bmi"] !== "" ? metrics["bmi"] : null;
-  const bodyFat = metrics["bodyFatPercentage"] !== undefined && metrics["bodyFatPercentage"] !== null && metrics["bodyFatPercentage"] !== "" ? metrics["bodyFatPercentage"] : null;
-  const musclePercent = metrics["musclePercentage"] !== undefined && metrics["musclePercentage"] !== null && metrics["musclePercentage"] !== "" ? metrics["musclePercentage"] : null;
-  const heartRate = metrics["heartRate"] !== undefined && metrics["heartRate"] !== null && metrics["heartRate"] !== "" ? metrics["heartRate"] : null;
-  const bodyAge = metrics["bodyAge"] !== undefined && metrics["bodyAge"] !== null && metrics["bodyAge"] !== "" ? metrics["bodyAge"] : null;
-  const bodyScore = metrics["bodyScore"] !== undefined && metrics["bodyScore"] !== null && metrics["bodyScore"] !== "" ? metrics["bodyScore"] : null;
+  const weight =
+    metrics["weight"] !== undefined && metrics["weight"] !== null && metrics["weight"] !== ""
+      ? metrics["weight"]
+      : null;
+  const bmi =
+    metrics["bmi"] !== undefined && metrics["bmi"] !== null && metrics["bmi"] !== ""
+      ? metrics["bmi"]
+      : null;
+  const bodyFat =
+    metrics["bodyFatPercentage"] !== undefined &&
+    metrics["bodyFatPercentage"] !== null &&
+    metrics["bodyFatPercentage"] !== ""
+      ? metrics["bodyFatPercentage"]
+      : null;
+  const musclePercent =
+    metrics["musclePercentage"] !== undefined &&
+    metrics["musclePercentage"] !== null &&
+    metrics["musclePercentage"] !== ""
+      ? metrics["musclePercentage"]
+      : null;
+  const heartRate =
+    metrics["heartRate"] !== undefined &&
+    metrics["heartRate"] !== null &&
+    metrics["heartRate"] !== ""
+      ? metrics["heartRate"]
+      : null;
+  const bodyAge =
+    metrics["bodyAge"] !== undefined &&
+    metrics["bodyAge"] !== null &&
+    metrics["bodyAge"] !== ""
+      ? metrics["bodyAge"]
+      : null;
+  const bodyScore =
+    metrics["bodyScore"] !== undefined &&
+    metrics["bodyScore"] !== null &&
+    metrics["bodyScore"] !== ""
+      ? metrics["bodyScore"]
+      : null;
 
   // Filter 4 balanced categories
   // 1. Tissue & Muscle Masses (7 metrics)
@@ -666,7 +826,7 @@ export function ReportDocument({
     metaMorphMetricKeys.includes(m.key)
   );
 
-  // 4. WKF Weight Control & Goals (3 metrics)
+  // 4. Weight Control & Conditioning Goals (3 metrics)
   const controlMetricKeys = ["weightControl", "muscleControl", "fatControl"];
   const controlMetrics = METRICS_CONFIG.filter((m) =>
     controlMetricKeys.includes(m.key)
@@ -678,8 +838,13 @@ export function ReportDocument({
   // Unique document tracking code
   const certId = `KBAS-1405-${String(fullName).length * 17 + (age ?? 0)}`;
 
+  const resolvedChartSource = chartDataUrl || chartImagePath || null;
+
   return (
     <Document>
+      {/* ========================================================= */}
+      {/* PAGE 1: OFFICIAL DOSSIER & 25-METRIC TELEMETRY MATRIX     */}
+      {/* ========================================================= */}
       <Page size="A4" style={styles.page}>
         {/* Top Decorative Dual-Tone Color Ribbon */}
         <View style={styles.topRibbon}>
@@ -696,17 +861,17 @@ export function ReportDocument({
             <View style={styles.headerTextGroup}>
               <View style={styles.systemPill}>
                 <Text style={styles.systemPillText}>
-                  سامانه پایش هوشمند فیزیولوژی و بادی‌کامپوزیشن کاراته • Xiaomi S400 Telemetry
+                  سامانه پایش هوشمند فیزیولوژی ورزشی و بادی‌کامپوزیشن • Xiaomi S400 Telemetry
                 </Text>
               </View>
               <Text style={styles.clubTitleFa}>
                 باشگاه کاراته شرکت برق منطقه ای خراسان
               </Text>
               <Text style={styles.clubSubtitleFa}>
-                گزارش تخصصی ارزیابی بیومتریک و آمادگی جسمانی ورزشکار
+                پرونده جامع بیومتریک و تله‌متری ترکیب بدنی ورزشکار
               </Text>
               <Text style={styles.clubTitleEn}>
-                Khorasan Regional Electric Co. Karate Club • Biometric Analytics Report
+                Khorasan Regional Electric Co. Club • Comprehensive Biometric Dossier
               </Text>
             </View>
           </View>
@@ -728,14 +893,14 @@ export function ReportDocument({
         {/* Technical Masters & Leadership Banner */}
         <View style={styles.mastersBanner}>
           <View style={styles.mastersBadge}>
-            <Text style={styles.mastersBadgeText}>اساتید تیم و کادر فنی</Text>
+            <Text style={styles.mastersBadgeText}>کادر فنی و نظارت</Text>
           </View>
           <View style={styles.mastersTextCol}>
             <Text style={styles.mastersTextFa}>
-              شیهان کریمی و شیهان غفاری (اساتید تیم کاراته شرکت برق منطقه ای خراسان)
+              شیهان کریمی و شیهان غفاری (اساتید و کادر فنی شرکت برق منطقه ای خراسان)
             </Text>
             <Text style={styles.mastersTextEn}>
-              Team Masters: Shihan Karimi & Shihan Ghaffari (Khorasan Regional Electric Co. Karate Team)
+              Technical Masters: Shihan Karimi & Shihan Ghaffari (Khorasan Regional Electric Co.)
             </Text>
           </View>
         </View>
@@ -750,8 +915,8 @@ export function ReportDocument({
           </View>
 
           <View style={styles.dossierCol}>
-            <Text style={styles.dossierLabelFa}>جنسیت و رده مسابقاتی</Text>
-            <Text style={styles.dossierLabelEn}>Gender / Division</Text>
+            <Text style={styles.dossierLabelFa}>جنسیت</Text>
+            <Text style={styles.dossierLabelEn}>Gender</Text>
             <Text style={styles.dossierValue}>
               {gender === null
                 ? "ثبت نشده"
@@ -778,6 +943,14 @@ export function ReportDocument({
           </View>
 
           <View style={styles.dossierCol}>
+            <Text style={styles.dossierLabelFa}>رشته ورزشی هدف</Text>
+            <Text style={styles.dossierLabelEn}>Sport Discipline</Text>
+            <View style={styles.disciplineBadge}>
+              <Text style={styles.disciplineBadgeText}>{discInfo.labelFa}</Text>
+            </View>
+          </View>
+
+          <View style={styles.dossierCol}>
             <Text style={styles.dossierLabelFa}>امتیاز سلامت کل</Text>
             <Text style={styles.dossierLabelEn}>Body Score</Text>
             <Text style={styles.dossierValue}>
@@ -789,7 +962,7 @@ export function ReportDocument({
         {/* Section: 6 Primary Athletic Performance KPIs */}
         <View style={styles.sectionHeadingBar}>
           <Text style={styles.sectionHeadingFa}>
-            شاخص‌های محوری عملکرد رزمی و آمادگی بدنی
+            شاخص‌های محوری عملکرد جسمانی و آمادگی فیزیولوژیک
           </Text>
           <Text style={styles.sectionHeadingEn}>Key Performance Indicators</Text>
         </View>
@@ -812,7 +985,7 @@ export function ReportDocument({
               )}
             </View>
             <Text style={[styles.heroBadgeText, weight === null ? { color: "#94a3b8" } : undefined]}>
-              {weight !== null ? "وزن مسابقه WKF" : "اندازه‌گیری نشده"}
+              {weight !== null ? "وزن استاندارد" : "اندازه‌گیری نشده"}
             </Text>
           </View>
 
@@ -854,7 +1027,7 @@ export function ReportDocument({
               )}
             </View>
             <Text style={[styles.heroBadgeText, bodyFat === null ? { color: "#94a3b8" } : undefined]}>
-              {bodyFat !== null ? "رده قهرمانی" : "اندازه‌گیری نشده"}
+              {bodyFat !== null ? "ترکیب بهینه" : "اندازه‌گیری نشده"}
             </Text>
           </View>
 
@@ -875,7 +1048,7 @@ export function ReportDocument({
               )}
             </View>
             <Text style={[styles.heroBadgeText, musclePercent === null ? { color: "#94a3b8" } : undefined]}>
-              {musclePercent !== null ? "توان انفجاری" : "اندازه‌گیری نشده"}
+              {musclePercent !== null ? "تولید توان" : "اندازه‌گیری نشده"}
             </Text>
           </View>
 
@@ -896,7 +1069,7 @@ export function ReportDocument({
               )}
             </View>
             <Text style={[styles.heroBadgeText, heartRate === null ? { color: "#94a3b8" } : undefined]}>
-              {heartRate !== null ? "ریکاوری هوازی" : "اندازه‌گیری نشده"}
+              {heartRate !== null ? "پایش قلبی" : "اندازه‌گیری نشده"}
             </Text>
           </View>
 
@@ -940,13 +1113,13 @@ export function ReportDocument({
               {renderMetricValue(metric, metrics[metric.key])}
             </View>
           ))}
-          {/* Balanced 8th slot: Skeletal Muscle Ratio status */}
+          {/* Balanced 8th slot: Functional Muscle Drive status */}
           <View style={[styles.metricCard, { backgroundColor: "#f0fdf4", borderColor: "#a7f3d0" }]}>
             <View style={styles.metricHeaderGroup}>
               <Text style={styles.metricTitleFa}>وضعیت توده اسکلتی</Text>
               <Text style={styles.metricTitleEn}>Muscle Drive Index</Text>
             </View>
-            <Text style={styles.metricValText}>سطح مسابقاتی کومیته</Text>
+            <Text style={styles.metricValText}>سطح عملکردی مطلوب</Text>
           </View>
         </View>
 
@@ -970,10 +1143,10 @@ export function ReportDocument({
           ))}
         </View>
 
-        {/* Section 3: Metabolism & WKF Control Goals (8 slots: 4 morph + 3 control + 1 status) */}
+        {/* Section 3: Metabolism & Control Goals (8 slots: 4 morph + 3 control + 1 status) */}
         <View style={styles.sectionHeadingBar}>
           <Text style={styles.sectionHeadingFa}>
-            متابولیسم پایه، تیپ بدنی و اهداف تنظیم وزن WKF
+            متابولیسم پایه، تیپ بدنی و اهداف تنظیم وزن و عضله
           </Text>
           <Text style={styles.sectionHeadingEn}>Target Calibration & Adjustments</Text>
         </View>
@@ -1002,34 +1175,119 @@ export function ReportDocument({
           {/* Balanced 8th slot: Readiness rating */}
           <View style={[styles.metricCard, { backgroundColor: "#fefce8", borderColor: "#fde047" }]}>
             <View style={styles.metricHeaderGroup}>
-              <Text style={styles.metricTitleFa}>انطباق با کلاس وزن WKF</Text>
-              <Text style={styles.metricTitleEn}>Weight Class Status</Text>
+              <Text style={styles.metricTitleFa}>انطباق وزن استاندارد</Text>
+              <Text style={styles.metricTitleEn}>Target Weight Match</Text>
             </View>
-            <Text style={[styles.metricValText, { color: "#854d0e" }]}>سر وزن مسابقه • استاندارد WKF</Text>
+            <Text style={[styles.metricValText, { color: "#854d0e" }]}>در دامنه متناسب هدف</Text>
           </View>
         </View>
 
-        {/* Section: AI Karate Conditioning Coach Report */}
+        {/* Page 1 Analytical Notice Bar */}
+        <View style={styles.reportNoticeBar}>
+          <Text style={styles.reportNoticeTextFa}>
+            {dataOnly
+              ? "این خروجی فقط داده‌های اندازه‌گیری‌شده را ثبت کرده و جایگزین ارزیابی تخصصی بالینی نیست."
+              : "پرونده تله‌متری بیومتریک ورزشکار • جهت مشاهده نمودارهای تحلیلی و تحلیل مربیگری به صفحه دوم مراجعه فرمایید."}
+          </Text>
+          <Text style={styles.reportNoticeTextEn}>
+            {dataOnly
+              ? "Data-only export • Technical Record"
+              : "Page 1 of 2 • Biometric Telemetry Matrix"}
+          </Text>
+        </View>
+
+        {/* Footer Page 1 */}
+        <View style={styles.footer}>
+          <Text style={styles.footerTextRight}>
+            باشگاه کاراته شرکت برق منطقه ای خراسان • واحد سنجش و ارتقای عملکرد قهرمانی
+          </Text>
+          <Text style={styles.footerTextCenter}>
+            صفحه ۱ از ۲ • شناسنامه بیومتریک و تله‌متری شاخص‌ها
+          </Text>
+          <Text style={styles.footerTextLeft}>
+            KREC Telemetry Platform • Xiaomi S400 Protocol
+          </Text>
+        </View>
+      </Page>
+
+      {/* ========================================================= */}
+      {/* PAGE 2: VISUAL BIOMETRIC DASHBOARD & AI STRATEGY REPORT   */}
+      {/* ========================================================= */}
+      <Page size="A4" style={styles.page}>
+        {/* Top Decorative Dual-Tone Color Ribbon */}
+        <View style={styles.topRibbon}>
+          <View style={styles.ribbonEmerald} />
+          <View style={styles.ribbonGold} />
+        </View>
+
+        {/* Compact Header for Page 2 */}
+        <View style={styles.page2HeaderWrapper}>
+          <View style={styles.page2HeaderRight}>
+            <View style={styles.page2LogoBox}>
+              <Image style={styles.page2LogoImage} src={KREC_LOGO_DATA_URI} />
+            </View>
+            <View style={{ textAlign: "right" }}>
+              <Text style={styles.page2TitleFa}>
+                باشگاه کاراته شرکت برق منطقه ای خراسان • گزارش تحلیلی {nameFa}
+              </Text>
+              <Text style={styles.page2SubtitleFa}>
+                کد پرونده: {certId} • رشته: {discInfo.labelFa} • تاریخ: {toPersianDigits(generatedAt)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.page2HeaderLeft}>
+            <View style={styles.disciplineBadge}>
+              <Text style={styles.disciplineBadgeText}>{discInfo.badgeFa}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Section Heading: Visual Biometric Dashboard */}
+        <View style={styles.sectionHeadingBar}>
+          <Text style={styles.sectionHeadingFa}>
+            داشبورد تصویری ترکیب بدنی، رادار عملکرد و شاخص‌های بیومتریک
+          </Text>
+          <Text style={styles.sectionHeadingEn}>
+            Visual Biometric Dashboard & Athletic Radar
+          </Text>
+        </View>
+
+        {/* Embedded Visual Biometric Dashboard Image */}
+        {resolvedChartSource ? (
+          <View style={styles.chartContainer}>
+            <Image style={styles.chartImage} src={resolvedChartSource} />
+          </View>
+        ) : (
+          <View style={styles.chartFallbackBox}>
+            <Text style={styles.chartFallbackTitle}>
+              نمودار بصری چندبعدی برای این پرونده تولید نشده است
+            </Text>
+            <Text style={styles.chartFallbackDesc}>
+              جهت مشاهده رادار عملکرد و تفکیک بافت‌ها، اسکریپت تحلیل گرافیکی را بر روی داده‌های ارزیابی اجرا فرمایید.
+            </Text>
+          </View>
+        )}
+
+        {/* Section Heading: AI Coaching Analysis & Periodization */}
         <View style={styles.aiSection}>
           <View style={styles.aiHeader}>
             <View style={styles.aiHeaderRight}>
               <Text style={styles.aiTitleFa}>
                 {dataOnly
                   ? "گزارش هوش مصنوعی در داده‌های ورودی ارائه نشده است"
-                  : "تحلیل تخصصی مربی ارشد و کارشناس فیزیولوژی کاراته"}
+                  : `تحلیل تخصصی ${discInfo.coachTitleFa}`}
               </Text>
               <Text style={styles.aiTitleEn}>
                 {dataOnly
-                  ? "No AI-generated coaching report was supplied"
-                  : "Elite Karate Conditioning Analysis • Groq Llama-3 AI Engine"}
+                  ? "No AI coaching assessment supplied"
+                  : `${discInfo.labelEn} Coaching Analysis • Groq AI Engine`}
               </Text>
             </View>
             <View style={styles.aiBadge}>
-              <Text style={styles.aiBadgeText}>
-                {dataOnly ? "فقط داده‌های اندازه‌گیری" : "تأییدیه هوشمند کومیته"}
-              </Text>
+              <Text style={styles.aiBadgeText}>{discInfo.badgeFa}</Text>
             </View>
           </View>
+
           <View style={styles.aiBody}>
             {reportBlocks.map((block, idx) => {
               if (block.type === "heading") {
@@ -1055,30 +1313,50 @@ export function ReportDocument({
           </View>
         </View>
 
-        {/* Analytical Report Notice */}
+        {/* Verification and Endorsement Box */}
+        <View style={styles.verificationBox}>
+          <View style={styles.verificationCol}>
+            <Text style={styles.verificationTitleFa}>کادر فنی و مربی ارشد</Text>
+            <Text style={styles.verificationTitleEn}>Head Coach</Text>
+            <View style={styles.verificationSignLine} />
+            <Text style={styles.verificationStatus}>تأییدیه فنی صادر شد</Text>
+          </View>
+
+          <View style={styles.verificationCol}>
+            <Text style={styles.verificationTitleFa}>کارشناس سنجش و فیزیولوژی</Text>
+            <Text style={styles.verificationTitleEn}>Exercise Physiologist</Text>
+            <View style={styles.verificationSignLine} />
+            <Text style={styles.verificationStatus}>سامانه هوشمند Groq AI</Text>
+          </View>
+
+          <View style={styles.verificationCol}>
+            <Text style={styles.verificationTitleFa}>رویت و تعهد ورزشکار</Text>
+            <Text style={styles.verificationTitleEn}>Athlete Acknowledgment</Text>
+            <View style={styles.verificationSignLine} />
+            <Text style={styles.verificationStatus}>امضا و اثر انگشت</Text>
+          </View>
+        </View>
+
+        {/* Page 2 Legal / Technical Notice Bar */}
         <View style={styles.reportNoticeBar}>
           <Text style={styles.reportNoticeTextFa}>
-            {dataOnly
-              ? "این خروجی فقط داده‌های ارائه‌شده را نمایش می‌دهد و جایگزین تفسیر مربی یا ارزیابی تخصصی پزشکی نیست."
-              : "این کارنامه یک گزارش تحلیلی تخصصی از ترکیب بدنی ورزشکار بوده و مبنای تنظیم پروتکل‌های تمرینی کومیته و کاتا می‌باشد."}
+            این گزارش یک کارنامه تحلیلی-فیزیولوژیک جهت بهینه‌سازی عملکرد و برنامه تمرینی بوده و جایگزین تشخیص پزشکی نیست.
           </Text>
           <Text style={styles.reportNoticeTextEn}>
-            {dataOnly
-              ? "Data-only export • No medical or coaching assessment"
-              : "Biometric Performance Analytics • Internal Technical Record"}
+            Biometric Performance Analytics • Internal Technical Record • KREC
           </Text>
         </View>
 
-        {/* Footer */}
+        {/* Footer Page 2 */}
         <View style={styles.footer}>
           <Text style={styles.footerTextRight}>
             باشگاه کاراته شرکت برق منطقه ای خراسان • واحد سنجش و ارتقای عملکرد قهرمانی
           </Text>
           <Text style={styles.footerTextCenter}>
-            صفحه ۱ از ۱ • گزارش تحلیلی تخصصی
+            صفحه ۲ از ۲ • نمودار‌های تخصصی و تحلیل هوشمند
           </Text>
           <Text style={styles.footerTextLeft}>
-            KREC Karate Performance Telemetry • Xiaomi S400 Protocol
+            Groq Llama-3 Engine • Visual Biometrics Platform
           </Text>
         </View>
       </Page>
