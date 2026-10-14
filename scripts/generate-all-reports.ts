@@ -52,10 +52,19 @@ interface Profile {
 }
 
 const ATHLETE_PROFILES: Record<string, Profile> = {
+  Oghbaee: {
+    nameFa: "عقبایی",
+    nameEn: "Oghbaee",
+    displayName: "عقبایی (Oghbaee)",
+    gender: "MALE",
+    age: 63,
+    birthDateJalali: "1342/01/01",
+    discipline: "karate",
+  },
   Reza: {
-    nameFa: "رضا",
-    nameEn: "Reza",
-    displayName: "رضا (Reza)",
+    nameFa: "عقبایی",
+    nameEn: "Oghbaee",
+    displayName: "عقبایی (Oghbaee)",
     gender: "MALE",
     age: 63,
     birthDateJalali: "1342/01/01",
@@ -293,6 +302,8 @@ async function main() {
           OR: [
             { fullName: record.name },
             { fullName: profile.displayName },
+            { fullName: "Reza" },
+            { fullName: "رضا (Reza)" },
           ],
         },
         measuredAt: measuredAtDate,
@@ -369,6 +380,8 @@ ${metricsSummary}`;
         OR: [
           { fullName: record.name },
           { fullName: profile.displayName },
+          { fullName: "Reza" },
+          { fullName: "رضا (Reza)" },
         ],
       },
     });

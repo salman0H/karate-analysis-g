@@ -37,7 +37,8 @@ interface RawRecord {
 }
 
 const ATHLETE_PROFILES: Record<string, { nameFa: string; nameEn: string; displayName: string; gender: "MALE" | "FEMALE"; age: number; birthDateJalali: string }> = {
-  Reza: { nameFa: "رضا", nameEn: "Reza", displayName: "رضا (Reza)", gender: "MALE", age: 63, birthDateJalali: "1342/01/01" },
+  Oghbaee: { nameFa: "عقبایی", nameEn: "Oghbaee", displayName: "عقبایی (Oghbaee)", gender: "MALE", age: 63, birthDateJalali: "1342/01/01" },
+  Reza: { nameFa: "عقبایی", nameEn: "Oghbaee", displayName: "عقبایی (Oghbaee)", gender: "MALE", age: 63, birthDateJalali: "1342/01/01" },
   Maleki: { nameFa: "ملکی", nameEn: "Maleki", displayName: "ملکی (Maleki)", gender: "MALE", age: 55, birthDateJalali: "1350/01/01" },
   Adrian: { nameFa: "آدریان", nameEn: "Adrian", displayName: "آدریان (Adrian)", gender: "MALE", age: 10, birthDateJalali: "1395/01/01" },
   Arsam: { nameFa: "آرسام", nameEn: "Arsam", displayName: "آرسام (Arsam)", gender: "MALE", age: 10, birthDateJalali: "1395/01/01" },

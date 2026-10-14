@@ -46,7 +46,8 @@ def fa(text: str) -> str:
 
 # Persian athlete profiles and calendar ages
 PROFILES = {
-    "Reza": {"nameFa": "رضا", "age": 63, "birthYear": 1342},
+    "Oghbaee": {"nameFa": "عقبایی", "age": 63, "birthYear": 1342},
+    "Reza": {"nameFa": "عقبایی", "age": 63, "birthYear": 1342},
     "Maleki": {"nameFa": "ملکی", "age": 55, "birthYear": 1350},
     "Adrian": {"nameFa": "آدریان", "age": 10, "birthYear": 1395},
     "Arsam": {"nameFa": "آرسام", "age": 10, "birthYear": 1395},

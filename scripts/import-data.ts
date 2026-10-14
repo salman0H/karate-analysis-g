@@ -14,6 +14,7 @@ type AthleteProfile = {
 };
 
 const athleteProfiles: Record<string, AthleteProfile> = {
+  Oghbaee: { gender: "MALE", birthDateJalali: "1342/01/01", age: 63 },
   Reza: { gender: "MALE", birthDateJalali: "1342/01/01", age: 63 },
   Maleki: { gender: "MALE", birthDateJalali: "1350/01/01", age: 55 },
   Adrian: { gender: "MALE", birthDateJalali: "1395/01/01", age: 10 },
