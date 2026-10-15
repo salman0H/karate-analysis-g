@@ -124,12 +124,14 @@ export function KarateRosterSelector({
                 : null;
             const style = getAvatarStyle(athlete.fullName, idx);
 
-            // Initials (two first letters of name)
-            const initials = athlete.fullName
-              .split(" ")
-              .slice(0, 2)
-              .map((w) => w[0])
-              .join("");
+            // Clean Persian name & extract initials without parentheses
+            const cleanFaName = athlete.fullName.replace(/\s*\([^)]*\)/g, "").trim();
+            const enMatch = athlete.fullName.match(/\(([^)]+)\)/);
+            const enName = enMatch ? enMatch[1] : "";
+            const parts = cleanFaName.split(/\s+/);
+            const initials = parts.length >= 2
+              ? (parts[0][0] + " " + parts[1][0])
+              : cleanFaName.slice(0, 2);
 
             return (
               <div
@@ -183,12 +185,12 @@ export function KarateRosterSelector({
                     className={`truncate text-xs font-bold ${
                       isSelected ? "text-emerald-300" : "text-slate-100 group-hover:text-emerald-400"
                     }`}
+                    title={athlete.fullName}
                   >
-                    {athlete.fullName}
+                    {cleanFaName}
                   </div>
-                  <div className="mt-0.5 text-[10px] text-slate-400">
-                    {athlete.age ? `${athlete.age} سال` : "سن ثبت نشده"} •{" "}
-                    {athlete.gender === "MALE" ? "آقایان" : "بانوان"}
+                  <div className="mt-0.5 text-[10px] text-slate-400 truncate">
+                    {athlete.age ? `${athlete.age} سال` : "سن ثبت نشده"} • {enName ? enName : (athlete.gender === "MALE" ? "آقایان" : "بانوان")}
                   </div>
                 </div>
 

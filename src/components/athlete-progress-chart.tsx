@@ -337,86 +337,116 @@ export function AthleteProgressChart({
 
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
           <div className="text-[11px] text-slate-400">تغییر کل (از آزمون مبنا)</div>
-          <div
-            className={`mt-1 text-lg font-black flex items-center gap-1 ${
-              stats.totalDiff && stats.totalDiff > 0
-                ? stats.trend === "improved"
-                  ? "text-emerald-400"
-                  : "text-amber-400"
-                : stats.totalDiff && stats.totalDiff < 0
-                ? stats.trend === "improved"
-                  ? "text-emerald-400"
-                  : "text-rose-400"
-                : "text-slate-300"
-            }`}
-          >
-            {stats.totalDiff !== null ? (
-              <>
-                {stats.totalDiff > 0 ? (
-                  <ArrowUpRight className="h-4 w-4" />
-                ) : stats.totalDiff < 0 ? (
-                  <ArrowDownRight className="h-4 w-4" />
+          {validPoints.length <= 1 ? (
+            <div>
+              <div className="mt-1 text-base font-bold text-emerald-400">نقطه مبنا</div>
+              <div className="text-[10px] text-slate-500">اولین خروجی ثبت‌شده</div>
+            </div>
+          ) : (
+            <div>
+              <div
+                className={`mt-1 text-lg font-black flex items-center gap-1 ${
+                  stats.totalDiff && stats.totalDiff > 0
+                    ? stats.trend === "improved"
+                      ? "text-emerald-400"
+                      : "text-amber-400"
+                    : stats.totalDiff && stats.totalDiff < 0
+                    ? stats.trend === "improved"
+                      ? "text-emerald-400"
+                      : "text-rose-400"
+                    : "text-slate-300"
+                }`}
+              >
+                {stats.totalDiff !== null ? (
+                  <>
+                    {stats.totalDiff > 0 ? (
+                      <ArrowUpRight className="h-4 w-4" />
+                    ) : stats.totalDiff < 0 ? (
+                      <ArrowDownRight className="h-4 w-4" />
+                    ) : (
+                      <Minus className="h-4 w-4" />
+                    )}
+                    <span>
+                      {stats.totalDiff > 0 ? `+${stats.totalDiff}` : stats.totalDiff}{" "}
+                      {activeMetric.unit}
+                    </span>
+                  </>
                 ) : (
-                  <Minus className="h-4 w-4" />
+                  "—"
                 )}
-                <span>
-                  {stats.totalDiff > 0 ? `+${stats.totalDiff}` : stats.totalDiff}{" "}
-                  {activeMetric.unit}
-                </span>
-              </>
-            ) : (
-              "—"
-            )}
-          </div>
-          <div className="text-[10px] text-slate-500">
-            {stats.totalPct !== null ? `${stats.totalPct > 0 ? `+${stats.totalPct}` : stats.totalPct}٪ تغییر نسبی` : "—"}
-          </div>
+              </div>
+              <div className="text-[10px] text-slate-500">
+                {stats.totalPct !== null ? `${stats.totalPct > 0 ? `+${stats.totalPct}` : stats.totalPct}٪ تغییر نسبی` : "—"}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
           <div className="text-[11px] text-slate-400">تغییر نسبت به جلسه قبل</div>
-          <div className="mt-1 text-lg font-black text-white">
-            {validPoints.length >= 2 && stats.lastDiff !== null ? (
-              <span
-                className={
-                  stats.lastDiff > 0
-                    ? "text-emerald-400"
-                    : stats.lastDiff < 0
-                    ? "text-amber-400"
-                    : "text-slate-400"
-                }
-              >
-                {stats.lastDiff > 0 ? `+${stats.lastDiff}` : stats.lastDiff}{" "}
-                {activeMetric.unit}
-              </span>
-            ) : (
-              <span className="text-xs text-slate-500">نیاز به حداقل ۲ جلسه</span>
-            )}
-          </div>
-          <div className="text-[10px] text-slate-500">در مقایسه نوبت قبل</div>
+          {validPoints.length <= 1 ? (
+            <div>
+              <div className="mt-1 text-base font-bold text-slate-300">جلسه اول</div>
+              <div className="text-[10px] text-slate-500">در انتظار نوبت ۲ جهت مقایسه</div>
+            </div>
+          ) : (
+            <div>
+              <div className="mt-1 text-lg font-black text-white">
+                {stats.lastDiff !== null ? (
+                  <span
+                    className={
+                      stats.lastDiff > 0
+                        ? "text-emerald-400"
+                        : stats.lastDiff < 0
+                        ? "text-amber-400"
+                        : "text-slate-400"
+                    }
+                  >
+                    {stats.lastDiff > 0 ? `+${stats.lastDiff}` : stats.lastDiff}{" "}
+                    {activeMetric.unit}
+                  </span>
+                ) : (
+                  "—"
+                )}
+              </div>
+              <div className="text-[10px] text-slate-500">در مقایسه نوبت قبل</div>
+            </div>
+          )}
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
           <div className="text-[11px] text-slate-400">ارزیابی وضعیت روند</div>
-          <div className="mt-1 flex items-center gap-1.5 text-sm font-bold">
-            {stats.trend === "improved" ? (
-              <>
-                <TrendingUp className="h-4 w-4 text-emerald-400" />
-                <span className="text-emerald-400">روند صعودی و مطلوب</span>
-              </>
-            ) : stats.trend === "regressed" ? (
-              <>
-                <TrendingDown className="h-4 w-4 text-rose-400" />
-                <span className="text-rose-400">نیازمند بازنگری تمرینی</span>
-              </>
-            ) : (
-              <>
-                <Minus className="h-4 w-4 text-slate-400" />
-                <span className="text-slate-300">پایدار و تثبیت‌شده</span>
-              </>
-            )}
-          </div>
-          <div className="text-[10px] text-slate-500">تحلیل شاخص {activeMetric.labelFa}</div>
+          {validPoints.length <= 1 ? (
+            <div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-bold text-cyan-400">
+                <Activity className="h-4 w-4" />
+                <span>سنجش مرجع اولیه</span>
+              </div>
+              <div className="text-[10px] text-slate-500">خروجی ترازوی شیائومی S400</div>
+            </div>
+          ) : (
+            <div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-bold">
+                {stats.trend === "improved" ? (
+                  <>
+                    <TrendingUp className="h-4 w-4 text-emerald-400" />
+                    <span className="text-emerald-400">روند صعودی و مطلوب</span>
+                  </>
+                ) : stats.trend === "regressed" ? (
+                  <>
+                    <TrendingDown className="h-4 w-4 text-rose-400" />
+                    <span className="text-rose-400">نیازمند بازنگری تمرینی</span>
+                  </>
+                ) : (
+                  <>
+                    <Minus className="h-4 w-4 text-slate-400" />
+                    <span className="text-slate-300">پایدار و تثبیت‌شده</span>
+                  </>
+                )}
+              </div>
+              <div className="text-[10px] text-slate-500">تحلیل شاخص {activeMetric.labelFa}</div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -445,7 +475,18 @@ export function AthleteProgressChart({
       </div>
 
       {/* SVG Time-Series Chart */}
-      <div className="relative rounded-xl border border-slate-800/90 bg-slate-950/70 p-4">
+      <div className="relative rounded-xl border border-slate-800/90 bg-slate-950/70 p-4 space-y-3">
+        {validPoints.length === 1 && (
+          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-2 text-xs text-slate-300">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
+              ۱
+            </span>
+            <span>
+              این نقطه تنها خروجی واقعی ترازوی شیائومی (آزمون مبنا در تاریخ{" "}
+              <strong className="text-white font-mono">{validPoints[0]?.dateDisplay}</strong>) است. با ثبت نوبت ارزیابی جدید، خط روند پیشرفت و تحلیل مقایسه‌ای خودکار فعال می‌گردد.
+            </span>
+          </div>
+        )}
         {validPoints.length === 0 ? (
           <div className="flex h-56 flex-col items-center justify-center text-center text-slate-500 text-sm">
             <Activity className="h-8 w-8 mb-2 opacity-40 text-slate-400" />
