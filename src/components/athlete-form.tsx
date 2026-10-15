@@ -19,6 +19,12 @@ import {
   SportDiscipline,
 } from "@/types/athlete";
 import { calculateAgeFromJalali } from "@/lib/jalali";
+import { KarateRosterSelector } from "@/components/karate-roster-selector";
+import { AthleteProgressChart } from "@/components/athlete-progress-chart";
+import type {
+  AthleteWithAssessments,
+  AssessmentRecord,
+} from "@/types/athlete";
 import { SelfieCapture } from "@/components/selfie-capture";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,6 +78,149 @@ export function AthleteForm() {
   const [reportSource, setReportSource] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Roster & Longitudinal Progress Tracking State
+  const [rosterAthletes, setRosterAthletes] = useState<AthleteWithAssessments[]>([]);
+  const [selectedAthlete, setSelectedAthlete] = useState<AthleteWithAssessments | null>(null);
+  const [selectedAssessmentId, setSelectedAssessmentId] = useState<string | null>(null);
+  const [isFetchingRoster, setIsFetchingRoster] = useState<boolean>(true);
+
+  const fetchRoster = async () => {
+    setIsFetchingRoster(true);
+    try {
+      const res = await fetch("/api/athletes");
+      if (res.ok) {
+        const json = await res.json();
+        if (json.data && Array.isArray(json.data)) {
+          setRosterAthletes(json.data);
+          // If no athlete is currently selected, pick the first one by default
+          if (!selectedAthlete && json.data.length > 0) {
+            handleSelectRosterAthlete(json.data[0]);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Could not load roster athletes:", e);
+    } finally {
+      setIsFetchingRoster(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoster();
+  }, []);
+
+  const handleSelectRosterAthlete = (athlete: AthleteWithAssessments) => {
+    setSelectedAthlete(athlete);
+
+    // Auto-populate demographic form fields
+    setValue("fullName", athlete.fullName, { shouldValidate: true });
+    setValue("gender", athlete.gender, { shouldValidate: true });
+    setValue("birthDateJalali", athlete.birthDateJalali, { shouldValidate: true });
+    setValue("selfieDataUrl", athlete.selfieUrl ?? null);
+
+    // If athlete has assessments, load the latest assessment metrics
+    if (athlete.assessments && athlete.assessments.length > 0) {
+      const latestAss = athlete.assessments[athlete.assessments.length - 1];
+      setSelectedAssessmentId(latestAss.id);
+
+      const metricMap = (latestAss.metrics || {}) as Record<string, number | string>;
+      for (const m of METRICS_CONFIG) {
+        const val = metricMap[m.key];
+        if (val !== undefined && val !== null) {
+          setValue(`metrics.${m.key}` as any, val, { shouldDirty: true });
+          setValue(`enabledMetrics.${m.key}` as any, true, { shouldDirty: true });
+        }
+      }
+
+      if (latestAss.aiReport) {
+        setReport(latestAss.aiReport);
+        setReportSource("stored-session");
+      }
+    }
+  };
+
+  const handleSelectAssessment = (assessment: AssessmentRecord) => {
+    setSelectedAssessmentId(assessment.id);
+    const metricMap = (assessment.metrics || {}) as Record<string, number | string>;
+    for (const m of METRICS_CONFIG) {
+      const val = metricMap[m.key];
+      if (val !== undefined && val !== null) {
+        setValue(`metrics.${m.key}` as any, val, { shouldDirty: true });
+        setValue(`enabledMetrics.${m.key}` as any, true, { shouldDirty: true });
+      }
+    }
+    if (assessment.aiReport) {
+      setReport(assessment.aiReport);
+      setReportSource("stored-session");
+    }
+  };
+
+  const handleNewAthleteClick = () => {
+    setSelectedAthlete(null);
+    setSelectedAssessmentId(null);
+    reset({
+      fullName: "",
+      gender: "MALE",
+      birthDateJalali: "1385/01/01",
+      discipline: "karate",
+      selfieDataUrl: null,
+      metrics: getDefaultMetricsValues(),
+      enabledMetrics: getDefaultEnabledMetrics(),
+    });
+    setReport(null);
+    setReportSource(null);
+  };
+
+  const handleRunComparativeAnalysis = async (
+    prevAssessment: AssessmentRecord,
+    currAssessment: AssessmentRecord
+  ) => {
+    setIsAnalyzing(true);
+    setFormError(null);
+    try {
+      const prevMetrics = (prevAssessment.metrics || {}) as Record<string, number | string>;
+      const currMetrics = (currAssessment.metrics || {}) as Record<string, number | string>;
+
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: selectedAthlete ? selectedAthlete.fullName : watchedFullName,
+          gender: selectedAthlete ? selectedAthlete.gender : watchedGender,
+          age: calculatedAge ?? 20,
+          birthDateJalali: selectedAthlete ? selectedAthlete.birthDateJalali : birthDateJalali,
+          discipline: watchedDiscipline,
+          metrics: currMetrics,
+          measuredAt: currAssessment.measuredAt,
+          previousAssessment: {
+            measuredAt: prevAssessment.measuredAt,
+            metrics: prevMetrics,
+          },
+          clubName: "باشگاه کاراته شرکت برق منطقه ای خراسان",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "خطا در پردازش تحلیل مقایسه‌ای");
+      }
+
+      const resData = await response.json();
+      setReport(resData.report);
+      setReportSource(resData.source);
+
+      // Scroll smoothly to report card
+      setTimeout(() => {
+        const el = document.getElementById("ai-report-view");
+        el?.scrollIntoView({ behavior: "smooth" });
+      }, 200);
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : "خطا در اجرای تحلیل مقایسه‌ای");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const {
     register,
@@ -233,6 +382,12 @@ export function AthleteForm() {
 
     setIsAnalyzing(true);
     try {
+      // Check for previous assessment to provide comparative progression analysis
+      const prevAss =
+        selectedAthlete && selectedAthlete.assessments && selectedAthlete.assessments.length > 0
+          ? selectedAthlete.assessments[0]
+          : undefined;
+
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -243,6 +398,12 @@ export function AthleteForm() {
           birthDateJalali: data.birthDateJalali,
           discipline: data.discipline,
           metrics: appliedMetrics,
+          previousAssessment: prevAss
+            ? {
+                measuredAt: prevAss.measuredAt,
+                metrics: prevAss.metrics as Record<string, number | string>,
+              }
+            : undefined,
           clubName: "باشگاه کاراته شرکت برق منطقه ای خراسان",
         }),
       });
@@ -256,16 +417,19 @@ export function AthleteForm() {
       setReport(resData.report);
       setReportSource(resData.source);
 
-      // Async background DB record persistence (non-blocking)
+      // Async background DB record persistence with athlete linkage
       fetch("/api/athletes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
+          athleteId: selectedAthlete?.id,
           metrics: appliedMetrics,
           aiReport: resData.report,
         }),
-      }).catch((e) => console.log("DB sync note:", e));
+      })
+        .then(() => fetchRoster())
+        .catch((e) => console.log("DB sync note:", e));
 
       // Scroll smoothly to report card
       setTimeout(() => {
@@ -381,6 +545,26 @@ export function AthleteForm() {
 
   return (
     <div className="space-y-8">
+      {/* 1. Karate Class Roster & Avatar Selector */}
+      <KarateRosterSelector
+        athletes={rosterAthletes}
+        selectedAthleteId={selectedAthlete?.id}
+        onSelectAthlete={handleSelectRosterAthlete}
+        onNewAthleteClick={handleNewAthleteClick}
+        isLoading={isFetchingRoster}
+      />
+
+      {/* 2. Interactive Time-Series Progress Chart & Session History */}
+      {selectedAthlete && (
+        <AthleteProgressChart
+          athlete={selectedAthlete}
+          selectedAssessmentId={selectedAssessmentId ?? undefined}
+          onSelectAssessment={handleSelectAssessment}
+          onRunComparativeAnalysis={handleRunComparativeAnalysis}
+          isAnalyzing={isAnalyzing}
+        />
+      )}
+
       {/* Preset Quick-Picker & Sample Export Bar */}
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-xl">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/60 pb-3">
@@ -1113,7 +1297,7 @@ export function AthleteForm() {
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="default">
-                  {reportSource === "groq-llama-3" ? "Groq Llama-3" : "الگوریتم تخصصی کاراته / Karate Engine"}
+                  {reportSource?.includes("comparative") ? "تحلیل مقایسه‌ای پیشرفت • Groq Llama-3" : reportSource === "groq-llama-3" ? "Groq Llama-3" : "الگوریتم تخصصی کاراته / Karate Engine"}
                 </Badge>
                 <Button
                   type="button"

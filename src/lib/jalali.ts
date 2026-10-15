@@ -105,3 +105,19 @@ export function getTodayJalaliString(): string {
     return "امروز";
   }
 }
+
+/** Formats any Date or ISO date string into Persian Jalali display "YYYY/MM/DD". */
+export function formatJalaliDisplay(date: string | Date | null | undefined): string {
+  if (!date) return "—";
+  try {
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (isNaN(d.getTime())) return String(date);
+    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(d);
+  } catch {
+    return String(date);
+  }
+}

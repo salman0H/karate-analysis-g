@@ -173,6 +173,12 @@ export interface AnalyzeRequestPayload {
   discipline?: SportDiscipline;
   metrics: Record<string, number | string>;
   clubName?: string;
+  measuredAt?: string;
+  requireGroq?: boolean;
+  previousAssessment?: {
+    measuredAt: string;
+    metrics: Record<string, number | string>;
+  };
 }
 
 export interface AnalyzeResponsePayload {
@@ -185,4 +191,47 @@ export interface AnalyzeResponsePayload {
     recoveryScore: number;   // 0 - 100
   };
   generatedAt: string;
+}
+
+
+export interface AssessmentRecord {
+  id: string;
+  athleteId: string;
+  metrics: Record<string, number | string>;
+  aiReport?: string | null;
+  selfieUrl?: string | null;
+  deviceModel?: string;
+  measuredAt: string;
+  createdAt?: string;
+}
+
+export interface AthleteWithAssessments {
+  id: string;
+  fullName: string;
+  gender: "MALE" | "FEMALE";
+  birthDateJalali: string;
+  age: number;
+  selfieUrl?: string | null;
+  assessments: AssessmentRecord[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface MetricDeltaInfo {
+  key: string;
+  labelFa: string;
+  unit: string;
+  oldVal: number | null;
+  newVal: number | null;
+  diff: number | null;
+  pctChange: number | null;
+  trend: "improved" | "regressed" | "neutral" | "unmeasured";
+  isGoodImprovement: boolean;
+}
+
+export interface ComparativeAssessmentData {
+  athleteName: string;
+  previousMeasuredAt: string;
+  currentMeasuredAt: string;
+  deltas: Record<string, MetricDeltaInfo>;
 }
