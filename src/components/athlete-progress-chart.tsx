@@ -338,9 +338,11 @@ export function AthleteProgressChart({
         <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
           <div className="text-[11px] text-[var(--text-secondary)]">تغییر کل (از آزمون مبنا)</div>
           {validPoints.length <= 1 ? (
-            <div>
-              <div className="mt-1 text-base font-bold text-emerald-600 dark:text-emerald-400">نقطه مبنا</div>
-              <div className="text-[10px] text-[var(--text-muted)]">اولین خروجی ثبت‌شده</div>
+            <div className="mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20">
+                نقطه مبنا (Baseline)
+              </span>
+              <div className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">اولین خروجی ثبت‌شده</div>
             </div>
           ) : (
             <div>
@@ -385,9 +387,11 @@ export function AthleteProgressChart({
         <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
           <div className="text-[11px] text-[var(--text-secondary)]">تغییر نسبت به جلسه قبل</div>
           {validPoints.length <= 1 ? (
-            <div>
-              <div className="mt-1 text-base font-bold text-[var(--text-secondary)]">جلسه اول</div>
-              <div className="text-[10px] text-[var(--text-muted)]">در انتظار نوبت ۲ جهت مقایسه</div>
+            <div className="mt-1">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-[var(--bg-app)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+                جلسه اول (ثبت تک نوبتی)
+              </span>
+              <div className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">در انتظار نوبت ۲ جهت مقایسه زمانی</div>
             </div>
           ) : (
             <div>
@@ -417,12 +421,12 @@ export function AthleteProgressChart({
         <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
           <div className="text-[11px] text-[var(--text-secondary)]">ارزیابی وضعیت روند</div>
           {validPoints.length <= 1 ? (
-            <div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-bold text-cyan-600 dark:text-cyan-400">
-                <Activity className="h-4 w-4" />
+            <div className="mt-1">
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-sky-500/10 text-sky-800 dark:text-sky-300 border border-sky-500/20">
+                <Activity className="h-3 w-3" />
                 <span>سنجش مرجع اولیه</span>
               </div>
-              <div className="text-[10px] text-[var(--text-muted)]">خروجی ترازوی شیائومی S400</div>
+              <div className="text-[10px] text-[var(--text-muted)] mt-1 font-medium">خروجی ترازوی شیائومی S400</div>
             </div>
           ) : (
             <div>
@@ -477,13 +481,13 @@ export function AthleteProgressChart({
       {/* SVG Time-Series Chart */}
       <div className="relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-4 space-y-3">
         {validPoints.length === 1 && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-2 text-xs text-[var(--text-secondary)]">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-[10px]">
+          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2.5 text-xs text-[var(--text-primary)] font-medium">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white font-bold text-[10px]">
               ۱
             </span>
             <span>
               این نقطه تنها خروجی واقعی ترازوی شیائومی (آزمون مبنا در تاریخ{" "}
-              <strong className="text-[var(--text-primary)] font-mono">{validPoints[0]?.dateDisplay}</strong>) است. با ثبت نوبت ارزیابی جدید، خط روند پیشرفت و تحلیل مقایسه‌ای خودکار فعال می‌گردد.
+              <strong className="text-emerald-800 dark:text-emerald-300 font-mono font-bold">{validPoints[0]?.dateDisplay}</strong>) است. با ثبت نوبت ارزیابی جدید، خط روند پیشرفت و تحلیل مقایسه‌ای خودکار فعال می‌گردد.
             </span>
           </div>
         )}
@@ -511,26 +515,29 @@ export function AthleteProgressChart({
                 y1={paddingY}
                 x2={chartWidth - paddingX}
                 y2={paddingY}
-                stroke="#cbd5e1"
+                stroke="currentColor"
+                className="text-[var(--border-subtle)]"
                 strokeDasharray="3 3"
-                strokeWidth="0.75"
+                strokeWidth="1"
               />
               <line
                 x1={paddingX}
                 y1={chartHeight / 2}
                 x2={chartWidth - paddingX}
                 y2={chartHeight / 2}
-                stroke="#e2e8f0"
+                stroke="currentColor"
+                className="text-[var(--border-subtle)]"
                 strokeDasharray="3 3"
-                strokeWidth="0.75"
+                strokeWidth="1"
               />
               <line
                 x1={paddingX}
                 y1={chartHeight - paddingY}
                 x2={chartWidth - paddingX}
                 y2={chartHeight - paddingY}
-                stroke="#cbd5e1"
-                strokeWidth="1"
+                stroke="currentColor"
+                className="text-[var(--border-default)]"
+                strokeWidth="1.25"
               />
 
               {/* Y Axis Labels */}
@@ -581,18 +588,6 @@ export function AthleteProgressChart({
                 const isSelected = selectedAssessmentId === pt.id;
                 return (
                   <g key={pt.id} className="cursor-pointer">
-                    {/* Pulsing ring on hover/selection */}
-                    {(isHovered || isSelected) && (
-                      <circle
-                        cx={pt.x}
-                        cy={pt.y}
-                        r="9"
-                        fill="none"
-                        stroke={activeMetric.color}
-                        strokeWidth="1.5"
-                        className="animate-ping opacity-60"
-                      />
-                    )}
                     <circle
                       cx={pt.x}
                       cy={pt.y}

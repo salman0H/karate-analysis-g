@@ -111,10 +111,10 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[var(--border-default)] bg-[var(--bg-surface-elevated)] p-4 transition-all">
       {isCameraActive ? (
         <div className="flex flex-col items-center gap-3 w-full">
-          <div className="relative h-56 w-56 max-w-full overflow-hidden rounded-2xl border-2 border-cyan-500/50 bg-black shadow-2xl">
+          <div className="relative h-56 w-56 max-w-full overflow-hidden rounded-2xl border-2 border-emerald-500/50 bg-black shadow-2xl">
             <Webcam
               ref={webcamRef}
               audio={false}
@@ -125,7 +125,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
                 height: 720,
               }}
               className="h-full w-full object-cover"
-              onUserMediaError={(err) => {
+              onUserMediaError={() => {
                 setCameraError(
                   "دسترسی به دوربین توسط مرورگر مسدود شده است یا وب‌کم متصل نیست. می‌توانید عکس را آپلود کنید."
                 );
@@ -135,7 +135,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
 
             {/* Karate silhouette / Target viewfinder ring */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <div className="h-40 w-36 rounded-full border border-dashed border-cyan-400/60 opacity-70" />
+              <div className="h-40 w-36 rounded-full border border-dashed border-emerald-400/60 opacity-70" />
             </div>
 
             {/* Shutter flash effect */}
@@ -147,7 +147,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
               <button
                 type="button"
                 onClick={toggleFacingMode}
-                className="rounded-full bg-slate-900/80 p-1.5 text-slate-300 hover:text-white backdrop-blur-md"
+                className="rounded-full bg-black/70 p-1.5 text-white hover:bg-black/90 backdrop-blur-md cursor-pointer"
                 title="تغییر دوربین"
               >
                 <SwitchCamera className="h-4 w-4" />
@@ -161,7 +161,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
               variant="default"
               size="sm"
               onClick={capture}
-              className="bg-cyan-600 hover:bg-cyan-500"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white"
             >
               <Camera className="h-4 w-4" />
               ثبت فریم
@@ -178,14 +178,14 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
         </div>
       ) : (
         <div className="flex flex-col items-center gap-3 py-2 text-center w-full">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-700 bg-slate-800/70 text-slate-400 shadow-inner">
-            <User className="h-8 w-8 text-slate-500" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-muted)] shadow-xs">
+            <User className="h-8 w-8 text-emerald-600" />
           </div>
           <div className="space-y-0.5">
-            <p className="text-xs font-semibold text-slate-200">
+            <p className="text-xs font-bold text-[var(--text-primary)]">
               تصویر پرتره / سلفی ورزشکار
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[var(--text-secondary)]">
               جهت درج در شناسنامه ورزشی و خروجی گزارش PDF باشگاه
             </p>
           </div>
@@ -200,7 +200,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
                 setIsCameraActive(true);
               }}
             >
-              <Camera className="h-3.5 w-3.5 text-cyan-400" />
+              <Camera className="h-3.5 w-3.5 text-emerald-600" />
               باز کردن وب‌کم
             </Button>
 
@@ -210,7 +210,7 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
               size="sm"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Upload className="h-3.5 w-3.5 text-emerald-400" />
+              <Upload className="h-3.5 w-3.5 text-emerald-600" />
               آپلود فایل
             </Button>
             <input
@@ -225,8 +225,8 @@ export function SelfieCapture({ value, onChange }: SelfieCaptureProps) {
       )}
 
       {cameraError && (
-        <div className="flex items-center gap-2 rounded-xl bg-amber-950/40 border border-amber-800/60 px-3 py-2 text-xs text-amber-300">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
+        <div className="flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
+          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
           <span>{cameraError}</span>
         </div>
       )}

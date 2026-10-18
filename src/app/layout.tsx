@@ -19,6 +19,11 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              try {
+                var savedTheme = localStorage.getItem('krec-theme') || 'light';
+                document.documentElement.classList.remove('dark', 'light');
+                document.documentElement.classList.add(savedTheme);
+              } catch (e) {}
               if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(function(registrations) {
                   for (var registration of registrations) {

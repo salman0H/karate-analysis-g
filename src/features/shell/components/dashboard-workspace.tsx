@@ -4,14 +4,12 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { useAppStore } from "@/core/store/use-app-store";
 import { EnterpriseShell } from "./enterprise-shell";
-import { HighDensityKpiGrid } from "@/features/analytics/components/high-density-kpi-grid";
-import { PerformanceChartCard } from "@/features/analytics/components/performance-chart-card";
 import { EnterpriseDataTable } from "@/features/athletes/components/enterprise-data-table";
 import { TeamAnalysisView } from "@/features/team-analysis/components/team-analysis-view";
 import { TechniquesView } from "@/features/techniques/components/techniques-view";
 import { ConditioningStandardsView } from "@/features/standards/components/conditioning-standards-view";
 import { Skeleton } from "@/shared/components/skeleton";
-import { ChevronLeft, Plus } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 // Code splitting: dynamically import heavy assessment form & comparative chart
 const AthleteForm = dynamic(
@@ -59,96 +57,21 @@ export function DashboardWorkspace() {
 
   return (
     <EnterpriseShell>
-      {/* 1. Analytics & Executive Overview */}
-      {activeView === "analytics" && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-4">
-            <div>
-              <h1 className="text-lg font-bold text-[var(--text-primary)]">
-                داشبورد تحلیلی و شاخص‌های آمادگی
-              </h1>
-              <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-                پایش ترکیب بدنی، توده عضلانی و وضعیت کومیته و کاتا بر مبنای ارزیابی‌های دستگاه Xiaomi S400
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsNewAssessmentMode(false);
-                  setActiveView("assessment");
-                }}
-                className="flex items-center gap-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white transition-colors cursor-pointer shadow-xs"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>ثبت ارزیابی جدید</span>
-              </button>
-            </div>
-          </div>
-
-          <HighDensityKpiGrid />
-          <PerformanceChartCard />
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-[var(--text-primary)]">
-                وضعیت بیومتریک اعضای تیم
-              </h2>
-              <button
-                type="button"
-                onClick={() => setActiveView("roster")}
-                className="flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-500 transition-colors cursor-pointer"
-              >
-                <span>مشاهده پرونده تمام اعضا</span>
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </button>
-            </div>
-
-            <EnterpriseDataTable
-              onSelectAthlete={(athlete) => {
-                setSelectedAthlete(athlete);
-                setActiveView("comparative");
-              }}
-              onNewAssessment={(athlete) => {
-                setSelectedAthlete(athlete);
-                setIsNewAssessmentMode(true);
-                setActiveView("assessment");
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* 2. Team Comprehensive Analysis */}
-      {activeView === "team" && (
+      {/* 1. Team Comprehensive Analysis & Age Bracket Comparison */}
+      {(activeView === "team" || activeView === "analytics") && (
         <div className="space-y-4">
           <TeamAnalysisView />
         </div>
       )}
 
-      {/* 3. Japanese Biomechanics Atlas & Techniques */}
-      {activeView === "techniques" && (
-        <div className="space-y-4">
-          <TechniquesView />
-        </div>
-      )}
-
-      {/* 4. Conditioning Normative Standards (8 to 70 years) */}
-      {activeView === "standards" && (
-        <div className="space-y-4">
-          <ConditioningStandardsView />
-        </div>
-      )}
-
-      {/* 5. Biometric Assessment Form (S400) */}
+      {/* 2. Biometric Assessment Form (S400) */}
       {activeView === "assessment" && (
         <div className="space-y-4">
           <AthleteForm />
         </div>
       )}
 
-      {/* 6. Athletes Roster & Records */}
+      {/* 3. Athletes Roster & Records */}
       {activeView === "roster" && (
         <div className="space-y-4">
           <div className="border-b border-[var(--border-subtle)] pb-3">
@@ -174,25 +97,47 @@ export function DashboardWorkspace() {
         </div>
       )}
 
-      {/* 7. Comparative Longitudinal Analysis */}
+      {/* 4. Japanese Biomechanics Atlas & Techniques */}
+      {activeView === "techniques" && (
+        <div className="space-y-4">
+          <TechniquesView />
+        </div>
+      )}
+
+      {/* 5. Conditioning Normative Standards (8 to 70 years) */}
+      {activeView === "standards" && (
+        <div className="space-y-4">
+          <ConditioningStandardsView />
+        </div>
+      )}
+
+      {/* 6. Individual Athlete Longitudinal Progress (Personal History Only) */}
       {activeView === "comparative" && (
         <div className="space-y-6">
-          <div className="border-b border-[var(--border-subtle)] pb-3">
-            <h1 className="text-lg font-bold text-[var(--text-primary)]">
-              تحلیل مقایسه‌ای پیشرفت ورزشکاران
-            </h1>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-              بررسی تغییرات توده عضلانی، درصد چربی و شاخص‌های توان انفجاری در طول دوره تمرینی
-            </p>
+          <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
+            <div>
+              <h1 className="text-lg font-bold text-[var(--text-primary)]">
+                پرونده و روند پیشرفت طولی ورزشکار
+              </h1>
+              <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+                مقایسه آزمون‌های دوره‌ای هر ورزشکار نسبت به جلسات قبلی خود (بدون مقایسه غیرعلمی افراد غیرهم‌رده)
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveView("roster")}
+              className="flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-500 cursor-pointer"
+            >
+              <span>بازگشت به لیست ورزشکاران</span>
+              <ChevronLeft className="h-4 w-4" />
+            </button>
           </div>
-
-          <PerformanceChartCard />
 
           {selectedAthlete ? (
             <AthleteProgressChart athlete={selectedAthlete} />
           ) : (
             <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-8 text-center text-xs text-[var(--text-secondary)]">
-              جهت مشاهده آنالیز مقایسه‌ای تفصیلی، یک ورزشکار را از لیست اعضا انتخاب کنید.
+              جهت مشاهده پرونده، یک ورزشکار را از لیست اعضا انتخاب کنید.
             </div>
           )}
         </div>

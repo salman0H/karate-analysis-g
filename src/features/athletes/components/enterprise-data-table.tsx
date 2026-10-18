@@ -190,8 +190,8 @@ export function EnterpriseDataTable({
               ) : (
                 paginatedRows.map((athlete, idx) => {
                   const latest = athlete.assessments?.[0];
-                  const muscle = latest?.metrics?.muscleMass ?? 58.2;
-                  const fat = latest?.metrics?.bodyFatRate ?? 14.5;
+                  const muscle = latest?.metrics?.muscleMass ?? latest?.metrics?.skeletalMuscleMass;
+                  const fat = latest?.metrics?.bodyFatPercentage ?? latest?.metrics?.bodyFatRate;
 
                   return (
                     <tr
@@ -200,14 +200,14 @@ export function EnterpriseDataTable({
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 font-bold font-mono text-xs">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-bold font-mono text-xs">
                             {athlete.fullName.slice(0, 1)}
                           </div>
                           <div>
-                            <div className="font-semibold text-[var(--text-primary)]">
+                            <div className="font-bold text-[var(--text-primary)]">
                               {athlete.fullName}
                             </div>
-                            <div className="font-mono text-[10px] text-[var(--text-muted)]">
+                            <div className="font-mono text-xs text-[var(--text-muted)]">
                               ID: {athlete.id.slice(-6).toUpperCase()}
                             </div>
                           </div>
@@ -215,39 +215,39 @@ export function EnterpriseDataTable({
                       </td>
 
                       <td className="py-3 px-3">
-                        <div className="font-mono text-xs tabular-nums text-[var(--text-primary)]">
+                        <div className="font-mono text-xs font-bold tabular-nums text-[var(--text-primary)]">
                           {athlete.age} سال
                         </div>
-                        <div className="font-mono text-[10px] text-[var(--text-muted)]">
+                        <div className="font-mono text-[11px] text-[var(--text-muted)]">
                           {athlete.birthDateJalali}
                         </div>
                       </td>
 
                       <td className="py-3 px-3">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[var(--bg-surface-elevated)] px-2 py-0.5 font-mono text-[10px] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                          <Shield className="h-3 w-3 text-emerald-400" />
+                        <span className="inline-flex items-center gap-1 rounded-md bg-[var(--bg-surface-elevated)] px-2.5 py-0.5 font-bold text-xs text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+                          <Shield className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                           <span>کاراته WKF</span>
                         </span>
                       </td>
 
                       <td className="py-3 px-3">
-                        <div className="font-mono text-[11px] text-[var(--text-primary)]">
+                        <div className="font-mono text-xs font-bold text-[var(--text-primary)]">
                           {latest ? formatJalaliDisplay(latest.measuredAt) : "آزمون اولیه"}
                         </div>
-                        <div className="font-mono text-[10px] text-emerald-400">
+                        <div className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
                           {athlete.assessments?.length ?? 1} بار ارزیابی
                         </div>
                       </td>
 
-                      <td className="py-3 px-3 font-mono text-xs tabular-nums text-[var(--text-primary)]">
-                        {String(muscle)} kg
-                        <div className="text-[10px] text-[var(--text-muted)]">
-                          چربی: {String(fat)}٪
+                      <td className="py-3 px-3 font-mono text-xs font-bold tabular-nums text-[var(--text-primary)]">
+                        {muscle ? `${muscle} kg` : "ثبت نشده"}
+                        <div className="text-[11px] font-semibold text-[var(--text-muted)]">
+                          چربی: {fat ? `${fat}٪` : "—"}
                         </div>
                       </td>
 
                       <td className="py-3 px-3">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-500/30">
                           آمادگی ۸۸٪
                         </span>
                       </td>

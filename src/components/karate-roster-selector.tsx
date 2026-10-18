@@ -62,7 +62,7 @@ export function KarateRosterSelector({
       {/* Roster Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300">
             <Users className="h-5 w-5" />
           </div>
           <div>
@@ -70,7 +70,7 @@ export function KarateRosterSelector({
               <h2 className="text-sm font-bold text-[var(--text-primary)]">
                 اعضای کلاس کاراته باشگاه برق منطقه‌ای خراسان
               </h2>
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+              <span className="rounded-full bg-emerald-500/15 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">
                 {athletes.length} رزمی‌کار فعال
               </span>
             </div>
@@ -96,7 +96,7 @@ export function KarateRosterSelector({
           <button
             type="button"
             onClick={onNewAthleteClick}
-            className="flex items-center gap-1.5 rounded-lg border border-dashed border-emerald-500/40 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-800 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-emerald-600 bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
           >
             <UserPlus className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">ثبت عضو جدید</span>
@@ -139,8 +139,8 @@ export function KarateRosterSelector({
                 onClick={() => onSelectAthlete(athlete)}
                 className={`group relative flex w-36 shrink-0 flex-col items-center rounded-xl border p-3 text-center transition-all cursor-pointer ${
                   isSelected
-                    ? "border-emerald-600 bg-emerald-50/70 shadow-sm ring-1 ring-emerald-500"
-                    : "border-[var(--border-subtle)] bg-[var(--bg-app)] hover:border-[var(--border-default)] hover:bg-[var(--bg-surface-elevated)]"
+                    ? "border-emerald-600 bg-emerald-500/10 shadow-sm ring-2 ring-emerald-500/30"
+                    : "border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--border-default)] hover:bg-[var(--bg-surface-elevated)]"
                 }`}
               >
                 {/* Selection Checkmark Badge */}
@@ -157,12 +157,12 @@ export function KarateRosterSelector({
                       src={athlete.selfieUrl}
                       alt={athlete.fullName}
                       className={`h-14 w-14 rounded-full object-cover border-2 shadow-md ${
-                        isSelected ? "border-emerald-400 ring-2 ring-emerald-400/30" : "border-slate-700"
+                        isSelected ? "border-emerald-500 ring-2 ring-emerald-400/30" : "border-[var(--border-default)]"
                       }`}
                     />
                   ) : (
                     <div
-                      className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${style} text-base font-black text-white shadow-lg border-2`}
+                      className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${style} text-base font-black text-white shadow-md border-2`}
                     >
                       {initials || "🥋"}
                     </div>
@@ -182,21 +182,23 @@ export function KarateRosterSelector({
                 {/* Athlete Name */}
                 <div className="w-full">
                   <div
-                    className={`truncate text-xs font-bold ${
-                      isSelected ? "text-emerald-300" : "text-slate-100 group-hover:text-emerald-400"
+                    className={`truncate text-xs font-bold transition-colors ${
+                      isSelected
+                        ? "text-emerald-800 dark:text-emerald-300"
+                        : "text-[var(--text-primary)] group-hover:text-emerald-700 dark:group-hover:text-emerald-400"
                     }`}
                     title={athlete.fullName}
                   >
                     {cleanFaName}
                   </div>
-                  <div className="mt-0.5 text-[10px] text-slate-400 truncate">
+                  <div className="mt-0.5 text-[10px] text-[var(--text-secondary)] font-medium truncate">
                     {athlete.age ? `${athlete.age} سال` : "سن ثبت نشده"} • {enName ? enName : (athlete.gender === "MALE" ? "آقایان" : "بانوان")}
                   </div>
                 </div>
 
                 {/* Last Measurement Date */}
-                <div className="mt-2 w-full border-t border-slate-800/80 pt-2 text-[10px] text-slate-500 flex items-center justify-center gap-1">
-                  <Calendar className="h-3 w-3 text-slate-500" />
+                <div className="mt-2 w-full border-t border-[var(--border-subtle)] pt-2 text-[10px] text-[var(--text-muted)] font-mono flex items-center justify-center gap-1">
+                  <Calendar className="h-3 w-3 text-[var(--text-muted)]" />
                   <span className="truncate">
                     {latestAssessment
                       ? formatJalaliDisplay(latestAssessment.measuredAt)

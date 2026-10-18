@@ -27,7 +27,7 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  activeView: "analytics",
+  activeView: "team",
   setActiveView: (view: DashboardView) => set({ activeView: view }),
 
   timeRange: "30D",

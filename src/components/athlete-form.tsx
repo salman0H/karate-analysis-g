@@ -971,12 +971,12 @@ export function AthleteForm() {
                       {...register("birthDateJalali")}
                       placeholder="۱۳۸۲/۰۵/۱۴"
                       dir="ltr"
-                      className="text-left font-mono"
+                      className="text-left font-mono pl-10"
                     />
-                    <Calendar className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-slate-500" />
+                    <Calendar className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-[var(--text-muted)]" />
                   </div>
                   {errors.birthDateJalali && (
-                    <p className="mt-1 text-xs text-rose-400">
+                    <p className="mt-1 text-xs text-rose-500">
                       {errors.birthDateJalali.message}
                     </p>
                   )}
@@ -1034,7 +1034,7 @@ export function AthleteForm() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <CardTitle>
-                  <Activity className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                  <Activity className="h-5 w-5 text-emerald-600" />
                   ثبت ۲۵ شاخص تله‌متری آنالایزر Xiaomi S400 (Biometrics Registry)
                 </CardTitle>
                 <CardDescription>
@@ -1093,18 +1093,18 @@ export function AthleteForm() {
             <div className="mb-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3.5 text-xs text-[var(--text-secondary)] space-y-2.5">
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-2.5">
                 <div>
-                  <div className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
+                  <div className="font-bold text-[var(--text-primary)] flex items-center gap-2">
                     <span>
                       {CATEGORY_LABELS_FA[activeCategory].titleFa} • {CATEGORY_LABELS_FA[activeCategory].titleEn}
                     </span>
-                    <Badge variant="secondary" className="text-[10px] font-mono">
+                    <span className="rounded-full bg-emerald-600 text-white px-2 py-0.5 text-[10px] font-mono font-bold shadow-xs">
                       {
                         currentCategoryMetrics.filter(
                           (m) => watchedEnabledMetrics?.[m.key] !== false
                         ).length
                       }{" "}
                       از {currentCategoryMetrics.length} فاکتور فعال
-                    </Badge>
+                    </span>
                   </div>
                   <div className="text-[var(--text-primary)] font-medium mt-1">
                     {CATEGORY_LABELS_FA[activeCategory].descFa}
@@ -1119,7 +1119,7 @@ export function AthleteForm() {
                   <button
                     type="button"
                     onClick={() => setCategoryMetricsEnabled(activeCategory, true)}
-                    className="cursor-pointer rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-800 dark:text-emerald-300 transition-all hover:bg-emerald-500/20 active:scale-95 flex items-center gap-1"
+                    className="cursor-pointer rounded-lg border border-emerald-600 bg-emerald-600 text-white px-2.5 py-1 text-[11px] font-bold shadow-xs transition-all hover:bg-emerald-500 active:scale-95 flex items-center gap-1"
                     title="اعمال تمام فاکتورهای این دسته"
                   >
                     <Check className="h-3 w-3" />
@@ -1128,10 +1128,10 @@ export function AthleteForm() {
                   <button
                     type="button"
                     onClick={() => setCategoryMetricsEnabled(activeCategory, false)}
-                    className="cursor-pointer rounded-lg border border-[var(--border-default)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--bg-surface-hover)] active:scale-95 flex items-center gap-1"
+                    className="cursor-pointer rounded-lg border border-rose-300 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-300 px-2.5 py-1 text-[11px] font-bold transition-all hover:bg-rose-100 active:scale-95 flex items-center gap-1"
                     title="عدم اعمال و خروج تمام فاکتورهای این دسته از سنجش"
                   >
-                    <X className="h-3 w-3 text-rose-500" />
+                    <X className="h-3 w-3 text-rose-600" />
                     <span>عدم اعمال همه</span>
                   </button>
                 </div>
