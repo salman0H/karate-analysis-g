@@ -1,20 +1,31 @@
-# سامانه پایش ترکیب بدنی و آنالیز عملکرد کاراته
-## Smart Biometric & Sport Telemetry Platform
-### باشگاه کاراته شرکت برق منطقه‌ای خراسان (KREC)
+<div align="center">
+  <img src="public/images/krec-logo.png" alt="KREC Karate Club Emblem" width="130" height="130" />
+  
+  <h1>🥋 سامانه پایش ترکیب بدنی و آنالیز عملکرد کاراته</h1>
+  <p><strong>Smart Biometric & Sport Telemetry Platform</strong></p>
+  <p><strong>باشگاه کاراته شرکت برق منطقه‌ای خراسان (KREC)</strong></p>
 
-![Next.js 16](https://img.shields.io/badge/Next.js-16.4.0-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
-![Tailwind CSS v4](https://img.shields.io/badge/TailwindCSS-v4-38bdf8?style=flat-square&logo=tailwindcss)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-JSONB-336791?style=flat-square&logo=postgresql)
-![Prisma ORM](https://img.shields.io/badge/Prisma-7.10-2D3748?style=flat-square&logo=prisma)
-![Groq AI](https://img.shields.io/badge/Groq_AI-Llama--3-f55036?style=flat-square)
-![Vercel Ready](https://img.shields.io/badge/Vercel-Deployable-000000?style=flat-square&logo=vercel)
+  <p>
+    <img src="https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 16" />
+    <img src="https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
+    <img src="https://img.shields.io/badge/PostgreSQL_JSONB-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL JSONB" />
+    <img src="https://img.shields.io/badge/Prisma_7-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma 7" />
+    <img src="https://img.shields.io/badge/Groq_AI-Llama_3-F55036?style=for-the-badge&logo=meta&logoColor=white" alt="Groq AI" />
+    <img src="https://img.shields.io/badge/Vercel_Ready-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel Ready" />
+    <img src="https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" alt="TanStack Query" />
+    <img src="https://img.shields.io/badge/Python_Charts-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Analytics" />
+  </p>
 
-پلتفرم سازمانی، تخصصی و یکپارچه پایش ۲۵ شاخص تله‌متری ترکیب بدنی، آنالیز بیومکانیک آزمایشگاهی و فیزیولوژی عملکرد نخبگان کاراته. این سامانه با تلفیق داده‌های سخت‌افزاری ترازوی هوشمند **Xiaomi Body Composition Scale S400**، استنتاج مربی هوش مصنوعی مبتنی بر **Groq Llama-3**، دانشنامه مستند کیوکوشین و ماتریس آسیب‌شناسی بین‌المللی، بستر مدیریت بدنی هوشمند ورزشکاران ۸ تا ۷۰ سال را برای کادر فنی فراهم می‌سازد.
+  <p>
+    پلتفرم سازمانی، تخصصی و یکپارچه پایش ۲۵ شاخص تله‌متری ترکیب بدنی، آنالیز بیومکانیک آزمایشگاهی و فیزیولوژی عملکرد نخبگان کاراته.<br />
+    تلفیق داده‌های سخت‌افزاری ترازوی هوشمند <strong>Xiaomi Body Composition Scale S400</strong>، استنتاج مربی هوش مصنوعی مبتنی بر <strong>Groq Llama-3</strong>، دانشنامه مستند کیوکوشین و ماتریس آسیب‌شناسی بین‌المللی برای کادر فنی و ورزشکاران ۸ تا ۷۰ سال.
+  </p>
+</div>
 
 ---
 
-## ارکان پنج‌گانه معماری سامانه (Core Architecture Pillars)
+## 🏛️ ارکان پنج‌گانه معماری سامانه (Core Architecture Pillars)
 
 ```mermaid
 graph TD
@@ -46,9 +57,9 @@ graph TD
 
 ---
 
-## قابلیت‌های کلیدی (Key Features)
+## ⚡ قابلیت‌های کلیدی (Key Features)
 
-### ۱. ارزیابی تحلیلی تیم و مقایسه در رده‌های سنی زیستی همتا
+### ۱. 🥋 ارزیابی تحلیلی تیم و مقایسه در رده‌های سنی زیستی همتا
 - **حذف مقایسه‌های ناهمگون**: مقایسه شاخص‌های بدنی صرفاً بین همتایان هم‌گروه سنی:
   - **نوجوانان و پایه (زیر ۱۶ سال - U16 Cadets & Foundation):** تمرکز بر الگوهای مهارتی، چابکی، واکنش سرعتی و داچی‌های بنیادین بدون بارگذاری وزنه سنگین. هنجار چربی WKF: ۱۰٪ تا ۱۴٪.
   - **جوانان و امید (۱۶ تا ۲۱ سال - U21 Junior Division):** هایپرتروفی کاربردی، شتاب پرش اسکوات، توان بی‌هوازی انفجاری و استارت‌های سریع کومیته. هنجار چربی WKF: ۸٪ تا ۱۲٪.
@@ -62,7 +73,7 @@ graph TD
   - تلمتری فواصل ماآی (SSI vs FS) و سهم سیستم‌های انرژی فسفاژن در مبارزات رسمی WKF
   - قابلیت کپی ساختار یکپارچه JSON کل داده‌ها جهت تحقیقات علوم ورزشی
 
-### ۲. پایش ۲۵ شاخص تله‌متری ترکیب بدنی (Xiaomi S400)
+### ۲. ⚖️ پایش ۲۵ شاخص تله‌متری ترکیب بدنی (Xiaomi S400)
 - ثبت و تحلیل دقیق ۲۵ پارامتر زیستی با متد BIA دوفرکانسی:
   - شاخص‌های جرمی: وزن کل، توده عضلانی اسکلتی، توده چربی، وزن بدون چربی (FFM)، توده استخوانی
   - شاخص‌های نسبتی: درصد چربی بدن، شاخص توده بدنی (BMI)، درصد آب و هیدراتاسیون، درصد پروتئین
@@ -70,20 +81,20 @@ graph TD
   - شاخص‌های سلامت سلولی: مایع درون‌سلولی (ICW)، مایع برون‌سلولی (ECW)، نسبت ECW/TBW و مقاومت الکتریکی بافت‌ها
 - طراحی پایگاه‌داده منعطف با اصل OCP و استفاده از فیلد مدرن `JSONB` در PostgreSQL.
 
-### ۳. پایش طولی پیشرفت فردی و تحلیل مقایسه‌ای
+### ۳. 📈 پایش طولی پیشرفت فردی و تحلیل مقایسه‌ای
 - ثبت سوابق جلسات متوالی هر ورزشکار و نمایش بر روی نمودار سری زمانی اختصاصی SVG.
 - محاسبه هوشمند دلتا تغییرات (وزن، عضله، چربی، آب) نسبت به جلسه مبنا (Baseline) و آخرین جلسه.
 - تشخیص خودکار جهت روند (صعودی مطلوب، خنثی، نیازمند بازنگری تمرینی) متناسب با ماهیت شاخص.
 - تحلیل استراتژیک مقایسه‌ای دوره‌ای توسط هوش مصنوعی Groq.
 
-### ۴. دانشنامه تکنیک‌ها، سلاح‌های طبیعی و پژوهش‌های مجله Black Belt
+### ۴. 🥊 دانشنامه تکنیک‌ها، سلاح‌های طبیعی و پژوهش‌های مجله Black Belt
 - **استقرارها و داچی‌ها:** زنکوتسو، کوکوتسو، کیباداچی، سانچین، نکوآشی، فودوداچی و تسوروآشی با تفکیک زاویه مفاصل، مرکز ثقل و اصول مکانیکی.
 - **۲۰ سلاح طبیعی دست و پا:** سیکن، اوراکن، شوتو، هایتو، نوکیته، امپی، تتسوی، کوکن، چوسوکو، هایسوکو، کاکاتو، تیسوکو و سونی به همراه تصاویر رسمی و تشریح استخوان‌بندی و زوایای آسیب‌پذیر.
 - **سوگندنامه دوجو (Dojokun):** ۷ بند فلسفی و اخلاقی سوسای اویاما با ترجمه رسمی و خط ژاپنی.
 - **سیستم ارتقاء درجات:** از کمربند سفید تا دان ۱۰ به همراه تشریح معنای رنگ و فلسفه کمربندها.
 - **پژوهش‌های Black Belt Magazine:** مستندسازی مکانیسم‌های بیومکانیک نیرو، تحلیل زمان برخورد و همبستگی آن با تله‌متری S400.
 
-### ۵. ماتریس استانداردهای فیزیولوژیکی (۸ تا ۷۰ سال)
+### ۵. 🧬 ماتریس استانداردهای فیزیولوژیکی (۸ تا ۷۰ سال)
 - دسته‌بندی استانداردهای سلامت و قهرمانی در گروه‌های سنی:
   - خردسالان و کودکان (۸ تا ۱۱ سال)
   - نوجوانان پایه (۱۲ تا ۱۵ سال)
@@ -93,36 +104,37 @@ graph TD
   - اساتید و پیشکسوتان ارشد (۵۱ تا ۷۰ سال)
 - تفکیک معیارهای ویژه کومیته (سرعت خطی، نسبت توان به وزن) و کاتا (پایداری، دانسیته اسکلتی عضلانی).
 
-### ۶. سیستم طراحی دوتایی یکپارچه (Zero-FOUC Dual Theme)
+### ۶. 🌓 سیستم طراحی دوتایی یکپارچه (Zero-FOUC Dual Theme)
 - تم روشن مینیمال شرکتی (Enterprise Clean Light Palette) با کنتراست فوق‌العاده بالا و خوانایی کامل.
 - تم تیره مدرن اسلیت (Enterprise Slate Dark Palette) با رنگ‌های عمیق و هایلایت‌های ملایم.
 - مهار کامل مدیا کوئری ناخواسته در Tailwind CSS v4 از طریق `@custom-variant dark`.
 - ذخیره‌سازی وضعیت تم در `localStorage` و اعمال آن در کلاینت بدون هیچ پرش نوری (Flash of Unstyled Content).
 
-### ۷. صدور شناسنامه ورزشی ۲ صفحه‌ای PDF
+### ۷. 📄 صدور شناسنامه ورزشی ۲ صفحه‌ای PDF
 - کامپایل مستقیم از طریق موتور `@react-pdf/renderer` در محیط Serverless.
 - شامل عکس سلفی احراز هویت، ماتریس ۲۵ فاکتور، کارت‌های KPI، نمودارهای بیومکانیک و پروتکل پیشنهادی مربی هوش مصنوعی.
 
 ---
 
-## پشته فناوری (Tech Stack)
+## 🛠️ پشته فناوری (Tech Stack)
 
-| لایه | فناوری | هدف و کارکرد |
-| :--- | :--- | :--- |
-| **Framework** | Next.js 16.4 (App Router & Turbopack) | رندرینگ مدرن سرور/کلاینت، معماری ماژولار و سرعت بیلد زیر ۱ ثانیه |
-| **Language** | TypeScript 5.0 | تایپ‌سیف بودن کامل داده‌های تله‌متری، رجیستری شاخص‌ها و هوش مصنوعی |
-| **Styling** | Tailwind CSS v4 + Semantic CSS Variables | سیستم طراحی سازمانی ریسپانسیو با پشتیبانی RTL و فونت‌های استاندارد وزیرمتن |
-| **Database** | PostgreSQL + JSONB | ذخیره امن اطلاعات هویتی و نگهداری بدون تغییرپذیری ۲۵ فاکتور BIA |
-| **ORM** | Prisma 7.10 (`@prisma/adapter-pg`) | ارتباط بهینه‌سازی‌شده با استخرهای کانکشن بدون سرور (Connection Pooling) |
-| **State Management** | Zustand 5 | مدیریت وضعیت‌های سراسری نرم‌افزار، تب‌های فعال و تم سیستم |
-| **Server State** | TanStack React Query v5 | واکشی، کش هوشمند و همگام‌سازی بلادرنگ داده‌های ورزشکاران |
-| **AI Engine** | Groq SDK (Llama-3 70B / Mixtral) | استنتاج فیزیولوژیکی و تدوین راهبردهای تمرینی اختصاصی تیم و ورزشکار |
-| **Document Generation** | `@react-pdf/renderer` | صدور مستقیم شناسنامه‌های چاپی ۲ صفحه‌ای با رزولوشن بالا |
-| **Hardware Integration** | WebRTC + Xiaomi S400 Protocol | دریافت بی‌درنگ تصویر سلفی و سازگاری با سنسورهای BIA ترازوی هوشمند |
+| لایه | فناوری | نشان و آیکون | هدف و کارکرد |
+| :--- | :--- | :---: | :--- |
+| **Framework** | Next.js 16.4 | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) | رندرینگ مدرن سرور/کلاینت، معماری ماژولار و سرعت بیلد زیر ۱ ثانیه |
+| **Language** | TypeScript 5.0 | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | تایپ‌سیف بودن کامل داده‌های تله‌متری، رجیستری شاخص‌ها و هوش مصنوعی |
+| **Styling** | Tailwind CSS v4 | ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white) | سیستم طراحی سازمانی ریسپانسیو با پشتیبانی RTL و فونت‌های استاندارد وزیرمتن |
+| **Database** | PostgreSQL + JSONB | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white) | ذخیره امن اطلاعات هویتی و نگهداری بدون تغییرپذیری ۲۵ فاکتور BIA |
+| **ORM** | Prisma 7.10 | ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) | ارتباط بهینه‌سازی‌شده با استخرهای کانکشن بدون سرور (Connection Pooling) |
+| **State Management** | Zustand 5 | ![Zustand](https://img.shields.io/badge/Zustand-443E38?style=flat-square&logo=react&logoColor=white) | مدیریت وضعیت‌های سراسری نرم‌افزار، تب‌های فعال و تم سیستم |
+| **Server State** | TanStack Query v5 | ![React Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=flat-square&logo=reactquery&logoColor=white) | واکشی، کش هوشمند و همگام‌سازی بلادرنگ داده‌های ورزشکاران |
+| **AI Engine** | Groq AI (Llama-3) | ![Groq](https://img.shields.io/badge/Groq_Llama_3-F55036?style=flat-square&logo=meta&logoColor=white) | استنتاج فیزیولوژیکی و تدوین راهبردهای تمرینی اختصاصی تیم و ورزشکار |
+| **Document Generation** | `@react-pdf/renderer` | ![PDF](https://img.shields.io/badge/React_PDF-E53E3E?style=flat-square&logo=adobeacrobatreader&logoColor=white) | صدور مستقیم شناسنامه‌های چاپی ۲ صفحه‌ای با رزولوشن بالا |
+| **Hardware / WebRTC** | Xiaomi S400 + WebRTC | ![WebRTC](https://img.shields.io/badge/WebRTC_Telemetry-0288D1?style=flat-square&logo=webrtc&logoColor=white) | دریافت بی‌درنگ تصویر سلفی و سازگاری با سنسورهای BIA ترازوی هوشمند |
+| **Visual Analytics** | Python 3 + Matplotlib | ![Python](https://img.shields.io/badge/Python_Charts-3776AB?style=flat-square&logo=python&logoColor=white) | تولید مستقل و آفلاین نمودارهای تحلیلی تصویری بیومکانیک |
 
 ---
 
-## ساختار دایرکتوری پروژه (Project Architecture)
+## 📁 ساختار دایرکتوری پروژه (Project Architecture)
 
 ```
 project/
@@ -176,21 +188,21 @@ project/
 
 ---
 
-## راه‌اندازی و اجرای محلی (Local Development)
+## 🚀 راه‌اندازی و اجرای محلی (Local Development)
 
 ### پیش‌نیازها
 - Node.js نسخه 20 به بالا
 - پکیج‌منیجر npm
 - پایگاه داده PostgreSQL (محلی یا ابری)
 
-### ۱. نصب وابستگی‌ها
+### ۱. 📦 نصب وابستگی‌ها
 ```bash
 git clone https://github.com/salman0H/karate-analysis-g.git
 cd karate-analysis-g
 npm install
 ```
 
-### ۲. پیکربندی متغیرهای محیطی
+### ۲. ⚙️ پیکربندی متغیرهای محیطی
 یک فایل `.env.local` در ریشه پروژه بسازید:
 ```env
 DATABASE_URL="postgresql://username:password@localhost:5432/karate_db?schema=public"
@@ -198,18 +210,18 @@ GROQ_API_KEY="gsk_your_groq_api_key_here"
 GROQ_MODEL="llama-3.3-70b-versatile"
 ```
 
-### ۳. ساخت و اعمال جداول پایگاه داده
+### ۳. 🗄️ ساخت و اعمال جداول پایگاه داده
 ```bash
 npx prisma db push
 ```
 
-### ۴. بارگذاری داده‌های اولیه رزمی‌کاران (اختیاری)
+### ۴. 📊 بارگذاری داده‌های اولیه رزمی‌کاران (اختیاری)
 جهت بارگذاری ۱۱ رکورد واقعی ورزشکاران باشگاه کاراته شرکت برق منطقه‌ای خراسان:
 ```bash
 npm run import:data
 ```
 
-### ۵. اجرای محیط توسعه
+### ۵. 💻 اجرای محیط توسعه
 ```bash
 npm run dev
 ```
@@ -217,7 +229,7 @@ npm run dev
 
 ---
 
-## استقرار روی سرورهای ابری و Vercel (Deployment Guide)
+## ☁️ استقرار روی سرورهای ابری و Vercel (Deployment Guide)
 
 این پروژه برای استقرار سرورلس روی پلتفرم **Vercel** بهینه‌سازی شده است:
 
@@ -233,7 +245,7 @@ npm run dev
 
 ---
 
-## مجوز و مالکیت معنوی (License & Attribution)
+## 📜 مجوز و مالکیت معنوی (License & Attribution)
 
 کلیه حقوق مادی و معنوی این سامانه متعلق به **باشگاه کاراته شرکت برق منطقه ای خراسان** است.
 استفاده از پایگاه داده بیومکانیک و استانداردهای آن با ذکر مراجع علمی (*WKF, Loturco et al., Benosmane et al., Camomilla et al., Black Belt Magazine*) بلامانع است.
