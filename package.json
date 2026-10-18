@@ -16,11 +16,12 @@
     "process:all": "tsx scripts/generate-all-reports.ts && python3 scripts/generate_charts.py && tsx scripts/generate_markdown_reports.ts"
   },
   "dependencies": {
-    "@next/env": "16.4.0",
     "@hookform/resolvers": "^5.9.1",
+    "@next/env": "16.4.0",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@react-pdf/renderer": "^4.9.0",
+    "@tanstack/react-query": "^5.104.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
@@ -35,7 +36,8 @@
     "react-hook-form": "^7.90.0",
     "react-webcam": "^7.2.0",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.6"
+    "zod": "^4.6.6",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -46,7 +48,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "tsx": "^4.23.15"
+    "tsx": "^4.23.15",
+    "typescript": "^5"
   }
 }

@@ -1,33 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
   --font-vazirmatn: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --background: #090d16;
-  --foreground: #f8fafc;
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Enterprise Clean Light Palette (Default) */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f1f5f9;
+  --bg-surface-hover: #e2e8f0;
+  --bg-muted: #f1f5f9;
+
+  --border-subtle: #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-strong: #94a3b8;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+
+  --accent-primary: #059669;
+  --accent-primary-hover: #047857;
+  --accent-primary-subtle: rgba(5, 150, 105, 0.08);
+}
+
+.dark {
+  /* Enterprise Slate Dark Palette */
+  --bg-app: #0b0f17;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1f2937;
+  --bg-surface-hover: #263346;
+  --bg-muted: #1e293b;
+
+  --border-subtle: #1f2937;
+  --border-default: #374151;
+  --border-strong: #4b5563;
+
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --accent-primary: #10b981;
+  --accent-primary-hover: #059669;
+  --accent-primary-subtle: rgba(16, 185, 129, 0.12);
 }
 
 body {
   font-family: var(--font-vazirmatn);
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   direction: rtl;
   overflow-x: hidden;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbars */
+/* Tabular numbers for strict alignment in reports and tables */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Markdown tables styling */
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+}
+.markdown-content th {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border-subtle);
+  text-align: right;
+}
+.markdown-content td {
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.markdown-content tr:nth-child(even) td {
+  background-color: var(--bg-app);
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: var(--border-default);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--border-strong);
 }

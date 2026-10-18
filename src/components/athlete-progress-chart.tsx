@@ -289,19 +289,19 @@ export function AthleteProgressChart({
   const latestAssessment = sortedAssessments[sortedAssessments.length - 1];
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-2xl backdrop-blur-xl space-y-6">
+    <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-sm space-y-6 text-[var(--text-primary)]">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <Activity className="h-5 w-5 text-emerald-400" />
-            <h3 className="text-base font-bold text-white">
+            <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <h3 className="text-base font-bold text-[var(--text-primary)]">
               نمودار تحلیلی و روند پیشرفت ورزشکار در طول زمان
             </h3>
           </div>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-[var(--text-secondary)]">
             پایش زمان‌مند تغییرات بیومتریک • {athlete.fullName} (تعداد جلسات پایش:{" "}
-            <span className="font-bold text-emerald-400">{sortedAssessments.length} جلسه</span>)
+            <span className="font-bold text-emerald-600 dark:text-emerald-400">{sortedAssessments.length} جلسه</span>)
           </p>
         </div>
 
@@ -311,9 +311,9 @@ export function AthleteProgressChart({
             type="button"
             onClick={() => onRunComparativeAnalysis(baselineAssessment, latestAssessment)}
             disabled={isAnalyzing}
-            className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 px-3.5 py-2 text-xs font-bold text-emerald-300 transition-all shadow-lg active:scale-95 cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 px-3.5 py-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-all shadow-sm active:scale-95 cursor-pointer disabled:opacity-50"
           >
-            <Sparkles className="h-4 w-4 text-emerald-400 animate-pulse" />
+            <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
             <span>
               {isAnalyzing
                 ? "در حال تحلیل تطبیقی با هوش مصنوعی..."
@@ -325,22 +325,22 @@ export function AthleteProgressChart({
 
       {/* KPI Delta Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-          <div className="text-[11px] text-slate-400">آخرین رکورد ثبتی</div>
-          <div className="mt-1 text-lg font-black text-white">
+        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
+          <div className="text-[11px] text-[var(--text-secondary)]">آخرین رکورد ثبتی</div>
+          <div className="mt-1 text-lg font-black text-[var(--text-primary)]">
             {stats.latestVal !== null ? `${stats.latestVal} ${activeMetric.unit}` : "ثبت نشده"}
           </div>
-          <div className="text-[10px] text-slate-500">
+          <div className="text-[10px] text-[var(--text-muted)]">
             {validPoints.length > 0 ? validPoints[validPoints.length - 1].dateDisplay : "—"}
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-          <div className="text-[11px] text-slate-400">تغییر کل (از آزمون مبنا)</div>
+        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
+          <div className="text-[11px] text-[var(--text-secondary)]">تغییر کل (از آزمون مبنا)</div>
           {validPoints.length <= 1 ? (
             <div>
-              <div className="mt-1 text-base font-bold text-emerald-400">نقطه مبنا</div>
-              <div className="text-[10px] text-slate-500">اولین خروجی ثبت‌شده</div>
+              <div className="mt-1 text-base font-bold text-emerald-600 dark:text-emerald-400">نقطه مبنا</div>
+              <div className="text-[10px] text-[var(--text-muted)]">اولین خروجی ثبت‌شده</div>
             </div>
           ) : (
             <div>
@@ -348,13 +348,13 @@ export function AthleteProgressChart({
                 className={`mt-1 text-lg font-black flex items-center gap-1 ${
                   stats.totalDiff && stats.totalDiff > 0
                     ? stats.trend === "improved"
-                      ? "text-emerald-400"
-                      : "text-amber-400"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-amber-600 dark:text-amber-400"
                     : stats.totalDiff && stats.totalDiff < 0
                     ? stats.trend === "improved"
-                      ? "text-emerald-400"
-                      : "text-rose-400"
-                    : "text-slate-300"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-rose-600 dark:text-rose-400"
+                    : "text-[var(--text-secondary)]"
                 }`}
               >
                 {stats.totalDiff !== null ? (
@@ -375,31 +375,31 @@ export function AthleteProgressChart({
                   "—"
                 )}
               </div>
-              <div className="text-[10px] text-slate-500">
+              <div className="text-[10px] text-[var(--text-muted)]">
                 {stats.totalPct !== null ? `${stats.totalPct > 0 ? `+${stats.totalPct}` : stats.totalPct}٪ تغییر نسبی` : "—"}
               </div>
             </div>
           )}
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-          <div className="text-[11px] text-slate-400">تغییر نسبت به جلسه قبل</div>
+        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
+          <div className="text-[11px] text-[var(--text-secondary)]">تغییر نسبت به جلسه قبل</div>
           {validPoints.length <= 1 ? (
             <div>
-              <div className="mt-1 text-base font-bold text-slate-300">جلسه اول</div>
-              <div className="text-[10px] text-slate-500">در انتظار نوبت ۲ جهت مقایسه</div>
+              <div className="mt-1 text-base font-bold text-[var(--text-secondary)]">جلسه اول</div>
+              <div className="text-[10px] text-[var(--text-muted)]">در انتظار نوبت ۲ جهت مقایسه</div>
             </div>
           ) : (
             <div>
-              <div className="mt-1 text-lg font-black text-white">
+              <div className="mt-1 text-lg font-black text-[var(--text-primary)]">
                 {stats.lastDiff !== null ? (
                   <span
                     className={
                       stats.lastDiff > 0
-                        ? "text-emerald-400"
+                        ? "text-emerald-600 dark:text-emerald-400"
                         : stats.lastDiff < 0
-                        ? "text-amber-400"
-                        : "text-slate-400"
+                        ? "text-amber-600 dark:text-amber-400"
+                        : "text-[var(--text-secondary)]"
                     }
                   >
                     {stats.lastDiff > 0 ? `+${stats.lastDiff}` : stats.lastDiff}{" "}
@@ -409,50 +409,50 @@ export function AthleteProgressChart({
                   "—"
                 )}
               </div>
-              <div className="text-[10px] text-slate-500">در مقایسه نوبت قبل</div>
+              <div className="text-[10px] text-[var(--text-muted)]">در مقایسه نوبت قبل</div>
             </div>
           )}
         </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-3">
-          <div className="text-[11px] text-slate-400">ارزیابی وضعیت روند</div>
+        <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-3">
+          <div className="text-[11px] text-[var(--text-secondary)]">ارزیابی وضعیت روند</div>
           {validPoints.length <= 1 ? (
             <div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-bold text-cyan-400">
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-bold text-cyan-600 dark:text-cyan-400">
                 <Activity className="h-4 w-4" />
                 <span>سنجش مرجع اولیه</span>
               </div>
-              <div className="text-[10px] text-slate-500">خروجی ترازوی شیائومی S400</div>
+              <div className="text-[10px] text-[var(--text-muted)]">خروجی ترازوی شیائومی S400</div>
             </div>
           ) : (
             <div>
               <div className="mt-1 flex items-center gap-1.5 text-sm font-bold">
                 {stats.trend === "improved" ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-emerald-400" />
-                    <span className="text-emerald-400">روند صعودی و مطلوب</span>
+                    <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-emerald-600 dark:text-emerald-400">روند صعودی و مطلوب</span>
                   </>
                 ) : stats.trend === "regressed" ? (
                   <>
-                    <TrendingDown className="h-4 w-4 text-rose-400" />
-                    <span className="text-rose-400">نیازمند بازنگری تمرینی</span>
+                    <TrendingDown className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                    <span className="text-rose-600 dark:text-rose-400">نیازمند بازنگری تمرینی</span>
                   </>
                 ) : (
                   <>
-                    <Minus className="h-4 w-4 text-slate-400" />
-                    <span className="text-slate-300">پایدار و تثبیت‌شده</span>
+                    <Minus className="h-4 w-4 text-[var(--text-secondary)]" />
+                    <span className="text-[var(--text-secondary)]">پایدار و تثبیت‌شده</span>
                   </>
                 )}
               </div>
-              <div className="text-[10px] text-slate-500">تحلیل شاخص {activeMetric.labelFa}</div>
+              <div className="text-[10px] text-[var(--text-muted)]">تحلیل شاخص {activeMetric.labelFa}</div>
             </div>
           )}
         </div>
       </div>
 
       {/* Metric Selector Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800/80 pb-3">
-        <span className="text-xs font-semibold text-slate-400 ml-1">شاخص جهت نمایش:</span>
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-3">
+        <span className="text-xs font-semibold text-[var(--text-secondary)] ml-1">شاخص جهت نمایش:</span>
         {TRACKED_METRICS.map((metric) => {
           const isSelected = metric.key === selectedMetricKey;
           const IconComponent = metric.icon;
@@ -463,8 +463,8 @@ export function AthleteProgressChart({
               onClick={() => setSelectedMetricKey(metric.key)}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
                 isSelected
-                  ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
-                  : "bg-slate-800/60 text-slate-300 hover:bg-slate-800 hover:text-white"
+                  ? "bg-emerald-600 text-white font-bold shadow-sm"
+                  : "border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)] hover:text-[var(--text-primary)]"
               }`}
             >
               <IconComponent className="h-3.5 w-3.5" />
@@ -475,21 +475,21 @@ export function AthleteProgressChart({
       </div>
 
       {/* SVG Time-Series Chart */}
-      <div className="relative rounded-xl border border-slate-800/90 bg-slate-950/70 p-4 space-y-3">
+      <div className="relative rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] p-4 space-y-3">
         {validPoints.length === 1 && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-2 text-xs text-slate-300">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
+          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-3.5 py-2 text-xs text-[var(--text-secondary)]">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold text-[10px]">
               ۱
             </span>
             <span>
               این نقطه تنها خروجی واقعی ترازوی شیائومی (آزمون مبنا در تاریخ{" "}
-              <strong className="text-white font-mono">{validPoints[0]?.dateDisplay}</strong>) است. با ثبت نوبت ارزیابی جدید، خط روند پیشرفت و تحلیل مقایسه‌ای خودکار فعال می‌گردد.
+              <strong className="text-[var(--text-primary)] font-mono">{validPoints[0]?.dateDisplay}</strong>) است. با ثبت نوبت ارزیابی جدید، خط روند پیشرفت و تحلیل مقایسه‌ای خودکار فعال می‌گردد.
             </span>
           </div>
         )}
         {validPoints.length === 0 ? (
-          <div className="flex h-56 flex-col items-center justify-center text-center text-slate-500 text-sm">
-            <Activity className="h-8 w-8 mb-2 opacity-40 text-slate-400" />
+          <div className="flex h-56 flex-col items-center justify-center text-center text-[var(--text-muted)] text-sm">
+            <Activity className="h-8 w-8 mb-2 opacity-40 text-[var(--text-muted)]" />
             <span>اطلاعاتی برای شاخص {activeMetric.labelFa} در جلسات پایش ثبت نشده است.</span>
           </div>
         ) : (
@@ -500,7 +500,7 @@ export function AthleteProgressChart({
             >
               <defs>
                 <linearGradient id={`gradient-${activeMetric.key}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={activeMetric.color} stopOpacity="0.4" />
+                  <stop offset="0%" stopColor={activeMetric.color} stopOpacity="0.35" />
                   <stop offset="100%" stopColor={activeMetric.color} stopOpacity="0.0" />
                 </linearGradient>
               </defs>
@@ -511,7 +511,7 @@ export function AthleteProgressChart({
                 y1={paddingY}
                 x2={chartWidth - paddingX}
                 y2={paddingY}
-                stroke="#334155"
+                stroke="#cbd5e1"
                 strokeDasharray="3 3"
                 strokeWidth="0.75"
               />
@@ -520,7 +520,7 @@ export function AthleteProgressChart({
                 y1={chartHeight / 2}
                 x2={chartWidth - paddingX}
                 y2={chartHeight / 2}
-                stroke="#1e293b"
+                stroke="#e2e8f0"
                 strokeDasharray="3 3"
                 strokeWidth="0.75"
               />
@@ -529,7 +529,7 @@ export function AthleteProgressChart({
                 y1={chartHeight - paddingY}
                 x2={chartWidth - paddingX}
                 y2={chartHeight - paddingY}
-                stroke="#334155"
+                stroke="#cbd5e1"
                 strokeWidth="1"
               />
 
@@ -538,7 +538,7 @@ export function AthleteProgressChart({
                 x={paddingX - 8}
                 y={paddingY + 4}
                 textAnchor="end"
-                className="fill-slate-500 text-[10px] font-mono"
+                className="fill-[var(--text-muted)] text-[10px] font-mono"
               >
                 {maxVal}
               </text>
@@ -546,7 +546,7 @@ export function AthleteProgressChart({
                 x={paddingX - 8}
                 y={chartHeight / 2 + 3}
                 textAnchor="end"
-                className="fill-slate-500 text-[10px] font-mono"
+                className="fill-[var(--text-muted)] text-[10px] font-mono"
               >
                 {Number(((maxVal + minVal) / 2).toFixed(1))}
               </text>
@@ -554,7 +554,7 @@ export function AthleteProgressChart({
                 x={paddingX - 8}
                 y={chartHeight - paddingY + 2}
                 textAnchor="end"
-                className="fill-slate-500 text-[10px] font-mono"
+                className="fill-[var(--text-muted)] text-[10px] font-mono"
               >
                 {minVal}
               </text>
@@ -597,7 +597,7 @@ export function AthleteProgressChart({
                       cx={pt.x}
                       cy={pt.y}
                       r={isSelected ? "6" : isHovered ? "5.5" : "4"}
-                      fill="#0f172a"
+                      fill="var(--bg-surface, #ffffff)"
                       stroke={activeMetric.color}
                       strokeWidth={isSelected ? "3" : "2"}
                       onMouseEnter={() => setHoveredPointIndex(idx)}
@@ -611,7 +611,7 @@ export function AthleteProgressChart({
                       y={pt.y - 10}
                       textAnchor="middle"
                       className={`text-[11px] font-bold ${
-                        isHovered || isSelected ? "fill-white font-extrabold" : "fill-slate-300"
+                        isHovered || isSelected ? "fill-emerald-600 font-extrabold" : "fill-[var(--text-primary)]"
                       }`}
                     >
                       {pt.value}
@@ -622,7 +622,7 @@ export function AthleteProgressChart({
                       x={pt.x}
                       y={chartHeight - paddingY + 16}
                       textAnchor="middle"
-                      className="fill-slate-400 text-[9.5px] font-sans"
+                      className="fill-[var(--text-muted)] text-[9.5px] font-sans"
                     >
                       {pt.dateDisplay}
                     </text>
@@ -635,19 +635,19 @@ export function AthleteProgressChart({
 
         {/* Hover info panel */}
         {hoveredPointIndex !== null && validPoints[hoveredPointIndex] && (
-          <div className="mt-3 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/90 px-3.5 py-2 text-xs">
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-md px-3.5 py-2 text-xs">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-emerald-400" />
-              <span className="text-slate-300">
+              <Calendar className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-[var(--text-secondary)]">
                 تاریخ جلسه {hoveredPointIndex + 1}:{" "}
-                <strong className="text-white">
+                <strong className="text-[var(--text-primary)]">
                   {validPoints[hoveredPointIndex].dateDisplay}
                 </strong>
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">{activeMetric.labelFa}:</span>
-              <strong className="text-emerald-400 text-sm">
+              <span className="text-[var(--text-secondary)]">{activeMetric.labelFa}:</span>
+              <strong className="text-emerald-600 dark:text-emerald-400 text-sm">
                 {validPoints[hoveredPointIndex].value} {activeMetric.unit}
               </strong>
             </div>
@@ -657,11 +657,11 @@ export function AthleteProgressChart({
 
       {/* Historical Assessment Session Timeline Selector */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs text-slate-400">
-          <span className="font-semibold text-slate-300">
+        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+          <span className="font-semibold text-[var(--text-primary)]">
             جلسات ارزیابی ثبت‌شده در تاریخچه ({sortedAssessments.length} جلسه):
           </span>
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-[var(--text-muted)]">
             روی هر جلسه کلیک کنید تا جزئیات تله‌متری آن بارگذاری شود
           </span>
         </div>
@@ -682,46 +682,46 @@ export function AthleteProgressChart({
                 onClick={() => onSelectAssessment && onSelectAssessment(ass)}
                 className={`relative rounded-xl border p-3 transition-all cursor-pointer ${
                   isSelected
-                    ? "border-emerald-500 bg-emerald-950/40 shadow-lg shadow-emerald-950/50"
-                    : "border-slate-800/80 bg-slate-950/50 hover:border-slate-700 hover:bg-slate-900/60"
+                    ? "border-emerald-600 bg-emerald-500/10 shadow-sm"
+                    : "border-[var(--border-subtle)] bg-[var(--bg-surface-elevated)] hover:border-[var(--border-default)] hover:bg-[var(--bg-surface-hover)]"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[10px] font-bold text-slate-300">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[10px] font-bold text-[var(--text-secondary)]">
                       {idx + 1}
                     </span>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-[var(--text-primary)]">
                       جلسه {idx + 1}
                     </span>
                     {isFirst && (
-                      <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[9px] text-slate-400">
+                      <span className="rounded bg-[var(--bg-surface)] border border-[var(--border-subtle)] px-1.5 py-0.5 text-[9px] text-[var(--text-muted)]">
                         مبنا
                       </span>
                     )}
                     {isLatest && (
-                      <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-300">
+                      <span className="rounded bg-emerald-500/15 border border-emerald-500/20 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700 dark:text-emerald-300">
                         آخرین آزمون
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400">
+                  <span className="text-[10px] font-mono text-[var(--text-muted)]">
                     {formatJalaliDisplay(ass.measuredAt)}
                   </span>
                 </div>
 
-                <div className="mt-2.5 grid grid-cols-3 gap-1 text-[11px] border-t border-slate-800/60 pt-2 text-center">
+                <div className="mt-2.5 grid grid-cols-3 gap-1 text-[11px] border-t border-[var(--border-subtle)] pt-2 text-center">
                   <div>
-                    <span className="text-[10px] text-slate-500 block">وزن</span>
-                    <span className="font-semibold text-slate-200">{w}</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">وزن</span>
+                    <span className="font-semibold text-[var(--text-primary)]">{w}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 block">عضله</span>
-                    <span className="font-semibold text-cyan-300">{muscle}</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">عضله</span>
+                    <span className="font-semibold text-cyan-600 dark:text-cyan-400">{muscle}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 block">چربی</span>
-                    <span className="font-semibold text-amber-300">{fat}</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">چربی</span>
+                    <span className="font-semibold text-amber-600 dark:text-amber-400">{fat}</span>
                   </div>
                 </div>
               </div>
